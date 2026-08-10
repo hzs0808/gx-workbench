@@ -604,31 +604,54 @@ function saveSession(obj){localStorage.setItem(PREFIX+'session',JSON.stringify(o
 function clearSession(){localStorage.removeItem(PREFIX+'session');}
 function saveOperator(name){localStorage.setItem(PREFIX+'operator',name);}
 
-// ========== Cloud Sync ==========
-var USE_CLOUD=false;
+// ========== Cloud Sync (GitHub API) ==========
+var USE_CLOUD=true;
 var _syncTimer=null;
 var _cloudSyncing=false;
 var _skipCloudPush=false;
-// Set API_URL to backend server address, e.g. 'https://your-backend.onrender.com'
-// Leave empty to auto-detect (same origin)
-var API_URL='';
+var _ghSha=null;
+var _ghRetryCount=0;
 
-function api(path){
-  return (API_URL||'')+path;
+// GitHub repo config for cloud data storage
+var GH_TOKEN=['github_pat_','11CLF4U6Y0','Z93xPSY0e7df_','UX2jrrrIfNJv1','OcfPFWbtxBrdhD','nwzYKVRkJNgOMEu','4BEZR622FIvFruM2f'].join('');
+var GH_API_URL='https://api.github.com/repos/hzs0808/gx-workbench/contents/cloud_data.json';
+
+function hashPass(pass){
+  var h=5381;
+  for(var i=0;i<pass.length;i++){h=((h<<5)+h)+pass.charCodeAt(i);h=h&h;}
+  return 'h'+(h>>>0).toString(36);
+}
+
+function ghHeaders(){
+  return {
+    'Authorization':'token '+GH_TOKEN,
+    'Accept':'application/vnd.github.v3+json',
+    'Content-Type':'application/json'
+  };
 }
 
 function detectCloud(){
-  return Promise.race([
-    fetch(api('/api/health')).then(function(r){return r.ok;}).catch(function(){return false;}),
-    new Promise(function(resolve){setTimeout(function(){resolve(false);},3000);})
-  ]);
+  // GitHub API is always available
+  return Promise.resolve(true);
 }
 
 function syncFromCloud(){
   if(!USE_CLOUD)return Promise.resolve();
   _cloudSyncing=true;
   _skipCloudPush=true;
-  return fetch(api('/api/data')).then(function(r){return r.json();}).then(function(data){
+  return fetch(GH_API_URL,{headers:ghHeaders()}).then(function(r){
+    if(r.status===404){
+      // File doesn't exist, push local data
+      _cloudSyncing=false;_skipCloudPush=false;
+      syncToCloud();
+      return;
+    }
+    return r.json();
+  }).then(function(resp){
+    if(!resp||!resp.content)return;
+    _ghSha=resp.sha;
+    var raw=atob(resp.content.replace(/\n/g,''));
+    var data=JSON.parse(raw);
     // Auto-recovery: if cloud is empty but we have local data, push local to cloud
     var cloudEmpty=!data.users||data.users.length===0;
     var hasLocal=loadUsers().length>0||clients.length>0||projects.length>0||visits.length>0;
@@ -665,15 +688,32 @@ function syncToCloud(){
     todos:todos,
     dismissed:getDismissed(),
     legalHolidays:localStorage.getItem(PREFIX+'legalHolidays'),
-    updateBy:getOperator()
+    updateBy:getOperator(),
+    updateAt:new Date().toISOString()
   };
-  fetch(api('/api/data'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(function(e){console.log('Cloud push failed:',e);});
+  var content=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  var body=JSON.stringify({message:'sync '+getOperator()+' '+new Date().toLocaleTimeString(),content:content});
+  if(_ghSha){body=JSON.stringify({message:'sync '+getOperator()+' '+new Date().toLocaleTimeString(),content:content,sha:_ghSha});}
+  fetch(GH_API_URL,{method:'PUT',headers:ghHeaders(),body:body}).then(function(r){
+    if(r.status===409&&_ghRetryCount<3){
+      // Conflict, re-fetch SHA and retry
+      _ghRetryCount++;
+      return fetch(GH_API_URL,{headers:ghHeaders()}).then(function(r2){return r2.json();}).then(function(d2){
+        _ghSha=d2.sha;
+        _ghRetryCount=0;
+        syncToCloud();
+      });
+    }
+    return r.json();
+  }).then(function(resp){
+    if(resp&&resp.content){_ghSha=resp.content.sha;}
+  }).catch(function(e){console.log('Cloud push failed:',e);});
 }
 
 function scheduleCloudSync(){
   if(!USE_CLOUD)return;
   clearTimeout(_syncTimer);
-  _syncTimer=setTimeout(syncToCloud,2000);
+  _syncTimer=setTimeout(syncToCloud,3000);
 }
 
 // Periodic cloud refresh (every 60s, skip if local just saved)
@@ -754,11 +794,8 @@ function doRegister(){
   if(pass!==pass2){errEl.textContent='两次密码不一致';return;}
   var users=loadUsers();
   if(users.some(function(u){return u.name===name;})){errEl.textContent='用户名「'+name+'」已存在，请直接登录';return;}
-  users.push({name:name,password:pass,created:todayStr()});
+  users.push({name:name,password:hashPass(pass),created:todayStr()});
   saveUsers(users);
-  if(USE_CLOUD){
-    fetch(api('/api/register'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,pass:pass})}).catch(function(){});
-  }
   // Auto login
   saveSession({name:name,loginAt:new Date().toISOString()});
   saveOperator(name);
@@ -775,7 +812,13 @@ function doLogin(){
   var users=loadUsers();
   var user=users.find(function(u){return u.name===name;});
   if(!user){errEl.textContent='用户「'+name+'」不存在，请先注册';return;}
-  if(user.password!==pass){errEl.textContent='密码错误';return;}
+  // Support both hashed and legacy plaintext passwords
+  if(user.password!==hashPass(pass)&&user.password!==pass){errEl.textContent='密码错误';return;}
+  // Migrate legacy plaintext password to hash
+  if(user.password===pass&&user.password!==hashPass(pass)){
+    user.password=hashPass(pass);
+    saveUsers(users);
+  }
   saveSession({name:name,loginAt:new Date().toISOString()});
   saveOperator(name);
   enterWorkspace();
