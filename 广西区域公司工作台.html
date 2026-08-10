@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>中交华南勘测·广西区域公司</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --primary:#2563eb;--primary-light:#dbeafe;--primary-dark:#1d4ed8;
+  --red:#ef4444;--red-light:#fee2e2;--green:#16a34a;--green-light:#dcfce7;
+  --orange:#f59e0b;--orange-light:#fef3c7;--purple:#8b5cf6;--purple-light:#f3e8ff;
+  --gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-300:#d1d5db;
+  --gray-400:#9ca3af;--gray-500:#6b7280;--gray-600:#4b5563;--gray-700:#374151;
+  --gray-800:#1f2937;--gray-900:#111827;
+  --radius:12px;--radius-sm:8px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.1),0 4px 6px rgba(0,0,0,.05);
+}
+html{font-size:16px;-webkit-text-size-adjust:100%}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--gray-100);color:var(--gray-800);line-height:1.6;min-height:100vh;padding-bottom:env(safe-area-inset-bottom)}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;transition:all .15s}
+input,select,textarea{font-family:inherit;outline:none}
+.hidden{display:none!important}
+
+/* Header */
+.header{background:var(--primary);color:#fff;padding:14px 16px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(37,99,235,.25)}
+.header-row{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.header-title{font-size:18px;font-weight:700;display:flex;align-items:center;gap:8px;white-space:nowrap}
+.header-title svg{width:24px;height:24px;flex-shrink:0}
+.header-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.operator-box{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border-radius:8px;padding:4px 10px;font-size:13px}
+.operator-box svg{width:15px;height:15px}
+.operator-input{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.25);border-radius:6px;color:#fff;padding:3px 8px;font-size:13px;width:80px}
+.operator-input::placeholder{color:rgba(255,255,255,.6)}
+.btn-mini{background:rgba(255,255,255,.15);color:#fff;border-radius:6px;padding:5px 10px;font-size:13px;display:inline-flex;align-items:center;gap:4px}
+.btn-mini:hover{background:rgba(255,255,255,.28)}
+.btn-mini svg{width:14px;height:14px}
+.sync-badge{display:inline-flex;align-items:center;gap:4px;font-size:12px;color:#4ade80;padding:4px 8px;background:rgba(74,222,128,.15);border-radius:6px}
+.sync-badge.local{color:#fbbf24;background:rgba(251,191,36,.15)}
+.btn-danger-mini{background:rgba(239,68,68,.85)}
+.btn-danger-mini:hover{background:rgba(239,68,68,1)}
+
+/* Container */
+.container{max-width:1200px;margin:0 auto;padding:12px 16px 80px}
+
+/* Alert banner */
+.alert-banner{background:var(--orange-light);border:1px solid var(--orange);border-radius:var(--radius-sm);padding:8px 12px;margin-bottom:12px;font-size:13px;color:var(--gray-700);display:flex;align-items:center;gap:8px}
+.alert-banner svg{width:18px;height:18px;color:var(--orange);flex-shrink:0}
+
+/* Today section */
+.today-section{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.today-header{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.today-header h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.today-header svg{width:20px;height:20px}
+.today-count{background:rgba(255,255,255,.2);border-radius:20px;padding:2px 10px;font-size:12px;font-weight:600}
+.today-list{padding:8px}
+.today-empty{padding:20px;text-align:center;color:var(--gray-400);font-size:14px}
+.today-item{display:flex;align-items:flex-start;gap:10px;padding:10px 8px;border-bottom:1px solid var(--gray-100)}
+.today-item:last-child{border-bottom:none}
+.today-item.overdue{background:var(--red-light);border-radius:var(--radius-sm);padding:10px}
+.today-item-tag{flex-shrink:0;width:54px;font-size:11px;font-weight:600;text-align:center;padding:2px 0;border-radius:4px;margin-top:2px}
+.tag-overdue{background:var(--red);color:#fff}
+.tag-today{background:var(--primary);color:#fff}
+.tag-soon{background:var(--orange);color:#fff}
+.today-item-body{flex:1;min-width:0}
+.today-item-title{font-size:14px;font-weight:600;color:var(--gray-800);word-break:break-word}
+.today-item-desc{font-size:12px;color:var(--gray-500);margin-top:2px}
+.today-item-btn{flex-shrink:0;background:var(--primary);color:#fff;border-radius:6px;padding:5px 12px;font-size:12px;font-weight:600;min-height:32px;min-width:44px}
+.today-item-btn:hover{background:var(--primary-dark)}
+.today-item.overdue .today-item-btn{background:var(--red)}
+.today-item.overdue .today-item-btn:hover{background:#dc2626}
+.today-item-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.today-add-btn{display:flex;align-items:center;gap:4px;background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4);border-radius:6px;padding:4px 10px;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s}
+.today-add-btn:hover{background:rgba(255,255,255,.35)}
+.today-add-btn svg{width:14px;height:14px}
+.todo-done{text-decoration:line-through;opacity:.5}
+.todo-check{flex-shrink:0;width:20px;height:20px;border:2px solid var(--gray-300);border-radius:4px;cursor:pointer;display:flex;align-items:center;justify-content:center;margin-top:2px;transition:all .2s}
+.todo-check.done{background:var(--green);border-color:var(--green)}
+.todo-check.done svg{width:12px;height:12px;color:#fff}
+.todo-del{flex-shrink:0;background:none;border:none;color:var(--gray-400);cursor:pointer;padding:4px;border-radius:4px}
+.todo-del:hover{color:var(--red);background:var(--red-light)}
+
+/* Stats grid */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:14px}
+.stat-card{background:#fff;border-radius:var(--radius-sm);padding:12px 14px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.stat-card .stat-icon{position:absolute;right:10px;top:10px;opacity:.12}
+.stat-card .stat-icon svg{width:40px;height:40px}
+.stat-label{font-size:12px;color:var(--gray-500);margin-bottom:4px}
+.stat-value{font-size:22px;font-weight:700;color:var(--gray-800)}
+.stat-sub{font-size:11px;color:var(--gray-400);margin-top:2px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;background:#fff;border-radius:var(--radius-sm);padding:4px;margin-bottom:14px;box-shadow:var(--shadow)}
+.tab{flex:1;padding:10px 8px;font-size:14px;font-weight:600;color:var(--gray-500);border-radius:var(--radius-sm);text-align:center;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px}
+.tab svg{width:16px;height:16px}
+.tab.active{background:var(--primary);color:#fff}
+
+/* Main menu (level 1) */
+.main-menu{display:flex;gap:6px;background:#fff;border-radius:var(--radius);padding:6px;margin-bottom:14px;box-shadow:var(--shadow)}
+.main-tab{flex:1;padding:12px 8px;font-size:15px;font-weight:700;color:var(--gray-500);border-radius:var(--radius-sm);text-align:center;transition:all .2s;cursor:pointer;border:none;background:transparent}
+.main-tab:hover{background:var(--gray-100)}
+.main-tab.active{background:linear-gradient(135deg,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 2px 8px rgba(37,99,235,.3)}
+.sub-tabs{display:flex;gap:4px;background:#fff;border-radius:var(--radius-sm);padding:4px;margin-bottom:14px;box-shadow:var(--shadow);flex-wrap:wrap}
+.sub-tab{flex:1;min-width:90px;padding:9px 8px;font-size:13px;font-weight:600;color:var(--gray-500);border-radius:var(--radius-sm);text-align:center;transition:all .2s;cursor:pointer;border:none;background:transparent;display:flex;align-items:center;justify-content:center;gap:5px}
+.sub-tab svg{width:15px;height:15px}
+.sub-tab.active{background:var(--primary);color:#fff}
+
+/* Reimburse */
+.reim-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.reim-stat{background:#fff;border-radius:var(--radius);padding:12px 14px;box-shadow:var(--shadow);text-align:center}
+.reim-stat .v{font-size:20px;font-weight:800;color:var(--primary)}
+.reim-stat .l{font-size:12px;color:var(--gray-500);margin-top:2px}
+.badge-status{font-size:12px;padding:2px 8px;border-radius:20px;font-weight:600}
+.bs-pending{background:var(--orange-light);color:var(--orange-dark,#b45309)}
+.bs-approved{background:var(--green-light);color:var(--green)}
+.bs-paid{background:var(--primary-light);color:var(--primary-dark)}
+.bs-rejected{background:var(--red-light);color:var(--red)}
+
+/* Attendance */
+.at-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.at-toolbar select,.at-toolbar input,.at-toolbar button{font-size:13px;padding:6px 10px;border-radius:var(--radius-sm);border:1px solid var(--gray-200)}
+.at-grid-wrap{overflow-x:auto;margin-bottom:14px}
+.at-grid{border-collapse:collapse;font-size:12px;min-width:100%}
+.at-grid th,.at-grid td{border:1px solid var(--gray-200);padding:0;text-align:center}
+.at-grid th{background:var(--gray-100);font-weight:600;padding:6px 4px;white-space:nowrap}
+.at-grid th.day{width:30px}
+.at-grid td.name{position:sticky;left:0;background:#fff;font-weight:600;padding:6px 8px;white-space:nowrap;min-width:70px;text-align:left;z-index:2}
+.at-grid input{width:30px;height:30px;border:none;text-align:center;font-size:13px;font-weight:700;text-transform:uppercase;background:transparent}
+.at-grid input:focus{background:var(--primary-light);outline:2px solid var(--primary)}
+.at-grid td.hl{background:var(--orange-light)}
+.at-grid td.weekend{background:var(--gray-100)}
+.at-legend{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:12px 14px;margin-bottom:14px}
+.at-legend h4{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--gray-800)}
+.at-legend-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:4px;font-size:12px}
+.at-legend-item{display:flex;align-items:center;gap:5px;padding:2px 0}
+.at-code{display:inline-block;width:24px;font-weight:800;text-align:center;color:#fff;border-radius:4px;padding:1px 0;font-size:11px}
+.at-note{background:var(--orange-light);border:1px solid var(--orange);border-radius:var(--radius-sm);padding:8px 12px;font-size:12px;color:var(--gray-700);line-height:1.7}
+.at-note b{color:var(--red)}
+
+/* Panel */
+.panel{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+.panel-header{padding:12px 16px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;gap:8px}
+.panel-header h3{font-size:15px;font-weight:700;color:var(--gray-800);display:flex;align-items:center;gap:6px}
+.panel-header h3 svg{width:18px;height:18px;color:var(--primary)}
+.btn-add{background:var(--primary);color:#fff;border-radius:8px;padding:6px 14px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:4px;min-height:38px}
+.btn-add:hover{background:var(--primary-dark)}
+.btn-add svg{width:15px;height:15px}
+
+/* Form */
+.form-wrap{padding:12px 16px;border-bottom:1px solid var(--gray-100)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.form-field{display:flex;flex-direction:column;gap:4px}
+.form-field.full{grid-column:1/-1}
+.form-field label{font-size:12px;color:var(--gray-600);font-weight:600}
+.form-field input,.form-field select,.form-field textarea{border:1px solid var(--gray-300);border-radius:6px;padding:8px 10px;font-size:15px;background:var(--gray-50);color:var(--gray-800);width:100%}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.form-field textarea{resize:vertical;min-height:60px}
+.form-actions{display:flex;gap:8px;margin-top:10px}
+.btn{padding:8px 18px;border-radius:8px;font-size:14px;font-weight:600;min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:4px}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:var(--gray-100);color:var(--gray-600)}
+.btn-secondary:hover{background:var(--gray-200)}
+
+/* List */
+.list-wrap{padding:6px 0}
+.list-item{padding:12px 16px;border-bottom:1px solid var(--gray-100);position:relative}
+.list-item:last-child{border-bottom:none}
+.list-item:hover{background:var(--gray-50)}
+.list-item-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.list-item-main{flex:1;min-width:0}
+.list-item-title{font-size:15px;font-weight:600;color:var(--gray-800);word-break:break-word}
+.list-item-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.badge{font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;display:inline-flex;align-items:center;gap:3px}
+.badge-S{background:var(--red-light);color:var(--red)}
+.badge-A{background:var(--orange-light);color:var(--orange)}
+.badge-B{background:var(--blue-light,#dbeafe);color:var(--primary)}
+.badge-C{background:var(--gray-100);color:var(--gray-500)}
+.badge-stage{background:var(--primary-light);color:var(--primary-dark)}
+.badge-stage.s-signed{background:var(--green-light);color:var(--green)}
+.badge-stage.s-done{background:var(--gray-100);color:var(--gray-600)}
+.badge-amount{background:var(--green-light);color:var(--green);font-weight:700}
+.badge-amount.zero{background:var(--gray-100);color:var(--gray-500)}
+.badge-op{background:var(--purple-light);color:var(--purple)}
+.badge-region{background:var(--gray-100);color:var(--gray-600)}
+.list-item-desc{font-size:13px;color:var(--gray-500);margin-top:4px;word-break:break-word}
+.list-item-actions{display:flex;gap:6px;flex-shrink:0}
+.icon-btn{background:var(--gray-100);border-radius:6px;padding:6px;font-size:12px;color:var(--gray-600);min-height:36px;min-width:36px;display:inline-flex;align-items:center;justify-content:center}
+.icon-btn:hover{background:var(--gray-200)}
+.icon-btn svg{width:15px;height:15px}
+.icon-btn.danger:hover{background:var(--red-light);color:var(--red)}
+.list-empty{padding:30px;text-align:center;color:var(--gray-400);font-size:14px}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:#fff;border-radius:var(--radius);max-width:560px;width:100%;max-height:85vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
+.modal-header{padding:14px 18px;border-bottom:1px solid var(--gray-100);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#fff;border-radius:var(--radius) var(--radius) 0 0}
+.modal-header h3{font-size:16px;font-weight:700}
+.modal-close{background:var(--gray-100);border-radius:50%;width:30px;height:30px;display:flex;align-items:center;justify-content:center;color:var(--gray-500)}
+.modal-close:hover{background:var(--gray-200)}
+.modal-body{padding:16px 18px}
+.modal-footer{padding:12px 18px;border-top:1px solid var(--gray-100);display:flex;gap:8px;justify-content:flex-end;position:sticky;bottom:0;background:#fff;border-radius:0 0 var(--radius) var(--radius)}
+.confirm-text{font-size:15px;color:var(--gray-700);text-align:center;padding:8px 0}
+
+/* Funnel */
+.funnel-wrap{padding:12px 16px;display:flex;gap:6px;flex-wrap:wrap}
+.funnel-item{flex:1;min-width:70px;text-align:center;padding:8px 4px;border-radius:8px;background:var(--gray-50);border:1px solid var(--gray-200)}
+.funnel-item .fn-count{font-size:18px;font-weight:700;color:var(--primary)}
+.funnel-item .fn-label{font-size:11px;color:var(--gray-500);margin-top:2px}
+.funnel-item.active{background:var(--primary-light);border-color:var(--primary)}
+
+/* Toast */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--gray-800);color:#fff;padding:10px 20px;border-radius:8px;font-size:14px;z-index:300;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Bottom tab nav (mobile) */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--gray-200);display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.bottom-nav-item{flex:1;padding:8px 4px;text-align:center;font-size:11px;color:var(--gray-400);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;justify-content:center}
+.bottom-nav-item svg{width:22px;height:22px}
+.bottom-nav-item.active{color:var(--primary)}
+
+/* Auth screen */
+.auth-overlay{position:fixed;inset:0;z-index:500;background:url('assets/login_bg.jpg') center/cover no-repeat;display:flex;align-items:center;justify-content:flex-end;padding:16px 8% 16px 16px;overflow-y:auto}
+.auth-overlay::before{content:'';position:absolute;inset:0;background:rgba(255,255,255,.5);pointer-events:none}
+.auth-contact{position:absolute;left:3%;bottom:10%;z-index:2;font-size:17px;line-height:2;color:#fff;font-weight:500;pointer-events:none;text-shadow:0 1px 4px rgba(0,0,0,.5)}
+.auth-slogan{position:absolute;left:3%;top:16%;transform:none;z-index:2;display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;padding:0;pointer-events:none}
+.auth-slogan-line{font-family:"STXingkai","华文行楷","STKaiti","KaiTi","楷体",serif;font-size:80px;font-weight:700;color:rgba(30,64,175,.8);letter-spacing:20px;padding-left:20px;-webkit-text-stroke:1.5px rgba(30,64,175,.25);text-shadow:1px 1px 0 rgba(255,255,255,.95),0 0 2px rgba(255,255,255,.6),0 4px 24px rgba(255,255,255,.8);filter:drop-shadow(0 2px 6px rgba(0,0,0,.18));line-height:1.35}
+.auth-box{position:relative;z-index:1;background:rgba(255,255,255,.95);border-radius:16px;max-width:380px;width:100%;padding:28px 24px;box-shadow:0 20px 60px rgba(0,0,0,.25);backdrop-filter:blur(6px)}
+.auth-logo{text-align:center;margin-bottom:20px}
+.auth-logo svg{width:48px;height:48px;color:var(--primary)}
+.auth-logo h2{font-size:18px;font-weight:700;color:var(--gray-800);margin-top:8px}
+.auth-logo p{font-size:13px;color:var(--gray-400);margin-top:4px}
+.auth-tabs{display:flex;gap:4px;background:var(--gray-100);border-radius:8px;padding:3px;margin-bottom:16px}
+.auth-tab{flex:1;padding:8px;font-size:14px;font-weight:600;color:var(--gray-500);border-radius:6px;text-align:center;transition:all .2s}
+.auth-tab.active{background:#fff;color:var(--primary);box-shadow:var(--shadow)}
+.auth-field{margin-bottom:12px}
+.auth-field label{display:block;font-size:13px;color:var(--gray-600);font-weight:600;margin-bottom:5px}
+.auth-field input{width:100%;border:1px solid var(--gray-300);border-radius:8px;padding:10px 12px;font-size:15px;background:var(--gray-50);color:var(--gray-800)}
+.auth-field input:focus{border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.auth-btn{width:100%;padding:12px;border-radius:8px;font-size:15px;font-weight:700;min-height:48px;margin-top:4px}
+.auth-hint{font-size:12px;color:var(--gray-400);margin-top:10px;text-align:center;line-height:1.5}
+.auth-error{color:var(--red);font-size:13px;margin-top:8px;text-align:center;min-height:18px}
+.auth-user-select{font-size:13px;color:var(--gray-500);margin-bottom:8px;line-height:1.6}
+.auth-user-select b{color:var(--primary)}
+
+/* User badge in header */
+.user-badge{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border-radius:8px;padding:4px 10px;font-size:13px}
+.user-badge svg{width:15px;height:15px}
+.user-badge .user-name{font-weight:600;max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn-logout{background:rgba(239,68,68,.3);color:#fff;border-radius:6px;padding:4px 8px;font-size:12px;display:inline-flex;align-items:center;gap:3px}
+.btn-logout:hover{background:rgba(239,68,68,.5)}
+.btn-logout svg{width:13px;height:13px}
+
+/* Responsive */
+@media(max-width:768px){
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid,.form-grid-3{grid-template-columns:1fr}
+  .funnel-wrap{overflow-x:auto;flex-wrap:nowrap}
+  .funnel-item{min-width:68px}
+  .header-title{font-size:16px}
+  .auth-box{padding:20px 16px}
+  .reim-stats{grid-template-columns:repeat(3,1fr)}
+  .main-tab{font-size:13px;padding:10px 4px}
+  .sub-tab{font-size:12px}
+  .at-legend-grid{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+}
+@media(max-width:600px){
+  .auth-overlay{justify-content:center;padding:16px;flex-direction:column;align-items:center;background:#fff}
+  .auth-overlay::before{display:none}
+  .auth-slogan{position:static;transform:none;align-items:center;margin-bottom:20px}
+  .auth-slogan-line{font-size:32px;letter-spacing:8px;padding-left:8px}
+  .auth-contact{position:static;text-align:center;margin-top:16px;font-size:14px;color:rgba(30,64,175,.85);text-shadow:none}
+}
+@media(min-width:769px){
+  .stats-grid{grid-template-columns:repeat(4,1fr)}
+  .bottom-nav{display:none}
+  .container{padding-bottom:40px}
+}
+</style>
+</head>
+<body>
+
+<!-- Auth Screen -->
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-slogan">
+    <div class="auth-slogan-line">精勘细绘</div>
+    <div class="auth-slogan-line">数据先锋</div>
+  </div>
+  <div class="auth-box">
+    <div class="auth-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      <h2>中交华南勘测·广西区域公司</h2>
+      <p>工作台</p>
+    </div>
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">登录</div>
+      <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">注册</div>
+    </div>
+    <!-- Login form -->
+    <div id="loginForm">
+      <div class="auth-field">
+        <label>用户名</label>
+        <input type="text" id="loginName" placeholder="请输入注册的用户名" autocomplete="off">
+      </div>
+      <div class="auth-field">
+        <label>密码</label>
+        <input type="password" id="loginPass" placeholder="请输入密码" autocomplete="off">
+      </div>
+      <div class="auth-error" id="loginError"></div>
+      <button class="auth-btn btn-primary" onclick="doLogin()">登录</button>
+      <div class="auth-user-select" id="registeredList"></div>
+      <div class="auth-hint">多人协同：每人各自注册账号后登录<br>数据通过导出/导入在同事间同步</div>
+    </div>
+    <!-- Register form -->
+    <div id="registerForm" style="display:none">
+      <div class="auth-field">
+        <label>用户名</label>
+        <input type="text" id="regName" placeholder="如：负责人 / 同事A" autocomplete="off" maxlength="10">
+      </div>
+      <div class="auth-field">
+        <label>密码（至少4位）</label>
+        <input type="password" id="regPass" placeholder="设置登录密码" autocomplete="off">
+      </div>
+      <div class="auth-field">
+        <label>确认密码</label>
+        <input type="password" id="regPass2" placeholder="再次输入密码" autocomplete="off">
+      </div>
+      <div class="auth-error" id="regError"></div>
+      <button class="auth-btn btn-primary" onclick="doRegister()">注册并登录</button>
+      <div class="auth-hint">密码仅存于本地浏览器，不上传服务器<br>提示同事各自注册自己的账号</div>
+    </div>
+  </div>
+  <div class="auth-contact">
+    <div>公司地址：广东省广州市海珠区沥滘路298号广航大厦</div>
+    <div>公司电话：020-89084772</div>
+    <div>公司邮箱：ccccsurvey@163.com</div>
+  </div>
+</div><!-- Header -->
+<header class="header">
+  <div class="header-row">
+    <div class="header-title">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      中交华南勘测·广西区域公司
+    </div>
+    <div class="header-actions">
+      <div class="user-badge">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="user-name" id="currentUserName">--</span>
+        <button class="btn-logout" onclick="doLogout()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          退出
+        </button>
+      </div>
+      <button class="btn-mini" onclick="exportJSON()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+        导出JSON备份
+      </button>
+      <label class="btn-mini" style="cursor:pointer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
+        导入恢复
+        <input type="file" accept=".json" style="display:none" onchange="importJSON(event)">
+      </label>
+      <button class="btn-mini" onclick="exportExcel()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M8 13h8M8 17h5"/></svg>
+        导出Excel
+      </button>
+      <span class="sync-badge" id="syncBadge" style="display:none">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M20 6L9 17l-5-5"/></svg>
+        <span id="syncText">本地模式</span>
+      </span>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Main menu -->
+  <div class="main-menu">
+    <button class="main-tab active" onclick="switchMain('project')">项目管理</button>
+    <button class="main-tab" onclick="switchMain('reimburse')">报销管理</button>
+    <button class="main-tab" onclick="switchMain('logistics')">后勤管理</button>
+  </div>
+
+  <!-- View: 项目管理 -->
+  <div id="view-project">
+  <div id="alertBanner"></div>
+
+  <!-- Week todos section -->
+  <section class="today-section">
+    <div class="today-header">
+      <h2>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        本周待办事项
+      </h2>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button class="today-add-btn" onclick="showTodoForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          添加
+        </button>
+        <span class="today-count" id="todayCount">0项</span>
+      </div>
+    </div>
+    <div id="todoFormWrap" class="form-wrap hidden" style="padding:8px"></div>
+    <div class="today-list" id="todayList"></div>
+  </section>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-label">客户总数</div>
+      <div class="stat-value" id="statClients">0</div>
+      <div class="stat-sub" id="statClientsSub">重点客户 0</div>
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">跟进中项目</div>
+      <div class="stat-value" id="statProjects">0</div>
+      <div class="stat-sub" id="statProjectsSub">已签约 0</div>
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">跟进中金额</div>
+      <div class="stat-value" id="statAmount" style="color:var(--primary)">¥0</div>
+      <div class="stat-sub" id="statAmountSub">含已签 ¥0</div>
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">本月拜访</div>
+      <div class="stat-value" id="statVisits">0</div>
+      <div class="stat-sub" id="statVisitsSub">今日 0</div>
+      <div class="stat-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project funnel -->
+  <div class="panel" id="funnelPanel">
+    <div class="panel-header">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"/></svg>
+        项目阶段漏斗
+      </h3>
+    </div>
+    <div class="funnel-wrap" id="funnelWrap"></div>
+  </div>
+
+  <!-- Sub tabs (项目管理) -->
+  <div class="sub-tabs">
+    <button class="sub-tab active" data-tab="clients" onclick="switchTab('clients')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      客户管理
+    </button>
+    <button class="sub-tab" data-tab="visits" onclick="switchTab('visits')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      拜访记录
+    </button>
+    <button class="sub-tab" data-tab="projects" onclick="switchTab('projects')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+      项目跟踪
+    </button>
+  </div>
+
+  <!-- Visits panel -->
+  <div class="panel hidden" id="panel-visits">
+    <div class="panel-header">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        拜访记录
+      </h3>
+      <button class="btn-add" onclick="showForm('visit')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        记录拜访
+      </button>
+    </div>
+    <div id="visitForm" class="form-wrap hidden"></div>
+    <div class="list-wrap" id="visitList"></div>
+  </div>
+
+  <!-- Projects panel -->
+  <div class="panel hidden" id="panel-projects">
+    <div class="panel-header">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        项目跟踪
+      </h3>
+      <button class="btn-add" onclick="showForm('project')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        添加项目
+      </button>
+    </div>
+    <div id="projectForm" class="form-wrap hidden"></div>
+    <div class="list-wrap" id="projectList"></div>
+  </div>
+
+  <!-- Clients panel -->
+  <div class="panel" id="panel-clients">
+    <div class="panel-header">
+      <h3>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+        客户管理
+      </h3>
+      <button class="btn-add" onclick="showForm('client')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        添加客户
+      </button>
+    </div>
+    <div id="clientForm" class="form-wrap hidden"></div>
+    <div class="list-wrap" id="clientList"></div>
+  </div>
+
+  </div><!-- /view-project -->
+
+  <!-- View: 报销管理 -->
+  <div id="view-reimburse" class="hidden">
+    <div class="reim-stats" id="reimStats"></div>
+    <div class="panel">
+      <div class="panel-header">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          报销记录
+        </h3>
+        <button class="btn-add" onclick="showReimForm()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          新建报销
+        </button>
+      </div>
+      <div id="reimForm" class="form-wrap hidden"></div>
+      <div class="list-wrap" id="reimList"></div>
+    </div>
+  </div>
+
+  <!-- View: 后勤管理 -->
+  <div id="view-logistics" class="hidden">
+    <div class="panel">
+      <div class="panel-header">
+        <h3>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          考勤管理
+        </h3>
+      </div>
+      <div style="padding:12px 16px">
+        <div class="at-toolbar">
+          <label>月份 <select id="atMonth" onchange="renderAttendance()"></select></label>
+          <label>人员 <select id="atPerson" onchange="renderAttendance()"></select></label>
+          <button onclick="addAtPerson()" style="background:var(--primary);color:#fff;border:none;cursor:pointer">+ 添加考勤人员</button>
+          <button onclick="saveAttendance()" style="background:var(--green);color:#fff;border:none;cursor:pointer">保存考勤</button>
+        </div>
+        <div class="at-grid-wrap"><table class="at-grid" id="atGrid"></table></div>
+        <div class="at-legend" id="atLegend"></div>
+        <div class="at-note" id="atNote" style="margin-top:14px"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Bottom nav (mobile) -->
+<nav class="bottom-nav">
+  <div class="bottom-nav-item active" onclick="switchMain('project');scrollToTop()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    项目
+  </div>
+  <div class="bottom-nav-item" onclick="switchMain('reimburse');scrollToTop()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+    报销
+  </div>
+  <div class="bottom-nav-item" onclick="switchMain('logistics');scrollToTop()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    后勤
+  </div>
+</nav>
+
+<!-- Modal container -->
+<div id="modalContainer"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ========== Storage ==========
+var PREFIX='wb_survey_gx_';
+function loadData(key){try{var d=localStorage.getItem(PREFIX+key);return d?JSON.parse(d):[];}catch(e){return[];}}
+function loadDataObj(key){try{var d=localStorage.getItem(PREFIX+key);return d?JSON.parse(d):{};}catch(e){return{};}}
+var _lastLocalSave=Date.now();
+function saveData(key,data){localStorage.setItem(PREFIX+key,JSON.stringify(data));_lastLocalSave=Date.now();scheduleCloudSync();}
+function getDismissed(){try{var d=localStorage.getItem(PREFIX+'dismissed');return d?JSON.parse(d):[];}catch(e){return[];}}
+function saveDismissed(arr){saveData('dismissed',arr);}
+function dismissWeekItem(id,src){var d=getDismissed();d.push(src+':'+id);saveDismissed(d);renderWeekTodos();toast('已从待办中移除');}
+function isDismissed(id,src){return getDismissed().indexOf(src+':'+id)>=0;}
+function clearDismissed(){saveDismissed([]);}
+function loadUsers(){return loadData('users');}
+function saveUsers(arr){saveData('users',arr);}
+function loadSession(){try{var s=localStorage.getItem(PREFIX+'session');return s?JSON.parse(s):null;}catch(e){return null;}}
+function saveSession(obj){localStorage.setItem(PREFIX+'session',JSON.stringify(obj));}
+function clearSession(){localStorage.removeItem(PREFIX+'session');}
+function saveOperator(name){localStorage.setItem(PREFIX+'operator',name);}
+
+// ========== Cloud Sync ==========
+var USE_CLOUD=false;
+var _syncTimer=null;
+var _cloudSyncing=false;
+var _skipCloudPush=false;
+// Set API_URL to backend server address, e.g. 'https://your-backend.onrender.com'
+// Leave empty to auto-detect (same origin)
+var API_URL='';
+
+function api(path){
+  return (API_URL||'')+path;
+}
+
+function detectCloud(){
+  return Promise.race([
+    fetch(api('/api/health')).then(function(r){return r.ok;}).catch(function(){return false;}),
+    new Promise(function(resolve){setTimeout(function(){resolve(false);},3000);})
+  ]);
+}
+
+function syncFromCloud(){
+  if(!USE_CLOUD)return Promise.resolve();
+  _cloudSyncing=true;
+  _skipCloudPush=true;
+  return fetch(api('/api/data')).then(function(r){return r.json();}).then(function(data){
+    // Auto-recovery: if cloud is empty but we have local data, push local to cloud
+    var cloudEmpty=!data.users||data.users.length===0;
+    var hasLocal=loadUsers().length>0||clients.length>0||projects.length>0||visits.length>0;
+    if(cloudEmpty&&hasLocal){
+      console.log('Cloud data empty, auto-recovering from local...');
+      _cloudSyncing=false;_skipCloudPush=false;
+      syncToCloud();
+      return;
+    }
+    var changed=false;
+    if(data.users&&data.users.length){saveUsers(data.users);changed=true;}
+    if(data.clients){clients=data.clients;saveData('clients',clients);changed=true;}
+    if(data.projects){projects=data.projects;saveData('projects',projects);changed=true;}
+    if(data.visits){visits=data.visits;saveData('visits',visits);changed=true;}
+    if(data.reims){reims=data.reims;saveData('reims',reims);changed=true;}
+    if(data.attendance){attendance=data.attendance;saveData('attendance',attendance);changed=true;}
+    if(data.todos){todos=data.todos;saveData('todos',todos);changed=true;}
+    if(data.dismissed){saveDismissed(data.dismissed);changed=true;}
+    if(data.legalHolidays){localStorage.setItem(PREFIX+'legalHolidays',JSON.stringify(data.legalHolidays));changed=true;}
+    _lastLocalSave=Date.now();
+    if(changed&&typeof renderAll==='function')renderAll();
+  }).catch(function(e){console.log('Cloud sync failed:',e);}).then(function(){_cloudSyncing=false;_skipCloudPush=false;});
+}
+
+function syncToCloud(){
+  if(!USE_CLOUD||_cloudSyncing||_skipCloudPush)return;
+  var data={
+    users:loadUsers(),
+    clients:clients,
+    projects:projects,
+    visits:visits,
+    reims:reims,
+    attendance:attendance,
+    todos:todos,
+    dismissed:getDismissed(),
+    legalHolidays:localStorage.getItem(PREFIX+'legalHolidays'),
+    updateBy:getOperator()
+  };
+  fetch(api('/api/data'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(function(e){console.log('Cloud push failed:',e);});
+}
+
+function scheduleCloudSync(){
+  if(!USE_CLOUD)return;
+  clearTimeout(_syncTimer);
+  _syncTimer=setTimeout(syncToCloud,2000);
+}
+
+// Periodic cloud refresh (every 60s, skip if local just saved)
+setInterval(function(){
+  if(!USE_CLOUD)return;
+  if(Date.now()-_lastLocalSave>10000){syncFromCloud();}
+},60000);
+
+
+var REGION_OPTIONS=['南宁','柳州','桂林','梧州','北海','防城港','钦州','贵港','玉林','百色','贺州','河池','来宾','崇左','其他'];
+var STAGE_OPTIONS=['线索','初访','方案','报价','签约','实施','完工'];
+var STAGE_DONE='已完成';
+var GRADE_OPTIONS=['A级（重要）','B级（一般）','C级（线索）'];
+var VISIT_METHODS=['上门拜访','电话沟通','微信沟通','视频会议','其他'];
+var FOLLOW_STATUS=['待跟进','进行中','已完成','暂搁置'];
+
+var clients=[],projects=[],visits=[];
+var reims=[],attendance={},todos=[];
+
+// ========== Sample Data ==========
+var SAMPLE_DATA={
+  clients:[
+    {id:'c1',name:'广西交通规划设计院',contact:'王工',phone:'138xxxx8888',region:'南宁',grade:'A级（重要）',remark:'长期合作重点客户，广西高速路网勘测主力',lastVisit:'2026-07-28',operator:'负责人',created:'2026-07-10'},
+    {id:'c2',name:'桂林市政工程设计院',contact:'李总',phone:'139xxxx6666',region:'桂林',grade:'B级（一般）',remark:'桂林片区市政道路勘测合作方',lastVisit:'2026-07-20',operator:'同事A',created:'2026-07-10'},
+    {id:'c3',name:'柳州城市规划研究院',contact:'张经理',phone:'137xxxx5555',region:'柳州',grade:'C级（线索）',remark:'刚接触，有地形测绘需求',lastVisit:'2026-07-15',operator:'负责人',created:'2026-07-10'},
+    {id:'c4',name:'北海港务集团',contact:'陈主任',phone:'136xxxx4444',region:'北海',grade:'B级（一般）',remark:'港口测量项目，每年有稳定需求',lastVisit:'2026-07-05',operator:'同事A',created:'2026-07-10'}
+  ],
+  projects:[
+    {id:'p1',name:'南宁地铁5号线控制测量',clientId:'c1',stage:'方案',amount:80,expectedDate:'2026-08-25',gradeAssess:'A级（重点项目）',staffNeed:'测绘工程师6人、技术员3人',owner:'王工',leader:'刘总',remark:'方案已提交，等待甲方审核反馈',operator:'负责人',created:'2026-07-15'},
+    {id:'p2',name:'桂林临桂区道路勘测',clientId:'c2',stage:'报价',amount:45,expectedDate:'2026-08-12',gradeAssess:'B级（一般项目）',staffNeed:'测绘工程师4人',owner:'陈工',leader:'刘总',remark:'报价已发，等对方确认预算',operator:'同事A',created:'2026-07-20'},
+    {id:'p3',name:'柳州柳东新区地形测绘',clientId:'c3',stage:'线索',amount:30,expectedDate:'2026-09-15',gradeAssess:'C级（跟踪项目）',staffNeed:'待评估',owner:'待定',leader:'待定',remark:'客户刚有需求，需进一步沟通细节',operator:'负责人',created:'2026-07-25'},
+    {id:'p4',name:'北海铁山港航道测量',clientId:'c4',stage:'实施',amount:120,expectedDate:'2026-07-20',gradeAssess:'A级（重点项目）',staffNeed:'测绘工程师8人、潜水员2人',owner:'赵工',leader:'张总',remark:'已签约，外业测量进行中',operator:'同事A',created:'2026-06-20'}
+  ],
+  visits:[
+    {id:'v1',clientId:'c1',date:'2026-07-28',method:'上门拜访',content:'沟通地铁5号线测量方案细节，对方对技术方案较满意，下周给反馈',nextDate:'2026-08-06',status:'待跟进',operator:'负责人',created:'2026-07-28'},
+    {id:'v2',clientId:'c2',date:'2026-07-20',method:'上门拜访',content:'提交道路勘测报价方案，李总说需上报审批',nextDate:'2026-08-05',status:'待跟进',operator:'同事A',created:'2026-07-20'},
+    {id:'v3',clientId:'c4',date:'2026-07-05',method:'电话沟通',content:'确认航道测量实施进度，外业已完成60%',nextDate:'2026-08-10',status:'进行中',operator:'同事A',created:'2026-07-05'},
+    {id:'v4',clientId:'c3',date:'2026-07-15',method:'微信沟通',content:'初步了解地形测绘需求范围，约下周实地踏勘',nextDate:'2026-08-08',status:'待跟进',operator:'负责人',created:'2026-07-15'}
+  ]
+};
+
+// ========== Auth ==========
+function switchAuthTab(tab){
+  document.getElementById('tabLogin').classList.toggle('active',tab==='login');
+  document.getElementById('tabRegister').classList.toggle('active',tab==='register');
+  document.getElementById('loginForm').style.display=tab==='login'?'block':'none';
+  document.getElementById('registerForm').style.display=tab==='register'?'block':'none';
+  document.getElementById('loginError').textContent='';
+  document.getElementById('regError').textContent='';
+  if(tab==='login')renderRegisteredList();
+}
+function renderRegisteredList(){
+  var users=loadUsers();
+  var el=document.getElementById('registeredList');
+  if(users.length===0){el.innerHTML='';return;}
+  var names=users.map(function(u){return '<b>'+esc(u.name)+'</b>';}).join('、');
+  el.innerHTML='已注册用户：'+names+'<br>点击用户名可快速填入';
+  // Make names clickable
+  el.innerHTML='已注册用户：';
+  users.forEach(function(u,i){
+    el.innerHTML+='<span style="color:var(--primary);cursor:pointer;text-decoration:underline" onclick="fillLoginName(\''+esc(u.name)+'\')">'+esc(u.name)+'</span>';
+    if(i<users.length-1)el.innerHTML+='、';
+  });
+}
+function fillLoginName(name){
+  document.getElementById('loginName').value=name;
+  document.getElementById('loginPass').focus();
+}
+function doRegister(){
+  var name=document.getElementById('regName').value.trim();
+  var pass=document.getElementById('regPass').value;
+  var pass2=document.getElementById('regPass2').value;
+  var errEl=document.getElementById('regError');
+  errEl.textContent='';
+  if(!name){errEl.textContent='请输入用户名';return;}
+  if(name.length<2){errEl.textContent='用户名至少2个字符';return;}
+  if(pass.length<4){errEl.textContent='密码至少4位';return;}
+  if(pass!==pass2){errEl.textContent='两次密码不一致';return;}
+  var users=loadUsers();
+  if(users.some(function(u){return u.name===name;})){errEl.textContent='用户名「'+name+'」已存在，请直接登录';return;}
+  users.push({name:name,password:pass,created:todayStr()});
+  saveUsers(users);
+  if(USE_CLOUD){
+    fetch(api('/api/register'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:name,pass:pass})}).catch(function(){});
+  }
+  // Auto login
+  saveSession({name:name,loginAt:new Date().toISOString()});
+  saveOperator(name);
+  enterWorkspace();
+  toast('注册成功，已自动登录');
+}
+function doLogin(){
+  var name=document.getElementById('loginName').value.trim();
+  var pass=document.getElementById('loginPass').value;
+  var errEl=document.getElementById('loginError');
+  errEl.textContent='';
+  if(!name){errEl.textContent='请输入用户名';return;}
+  if(!pass){errEl.textContent='请输入密码';return;}
+  var users=loadUsers();
+  var user=users.find(function(u){return u.name===name;});
+  if(!user){errEl.textContent='用户「'+name+'」不存在，请先注册';return;}
+  if(user.password!==pass){errEl.textContent='密码错误';return;}
+  saveSession({name:name,loginAt:new Date().toISOString()});
+  saveOperator(name);
+  enterWorkspace();
+  toast('登录成功，欢迎 '+name);
+}
+function doLogout(){
+  showModal('退出登录','确定要退出当前账号吗？<br>退出后需要重新登录才能使用工作台。',function(){
+    clearSession();
+    document.getElementById('authOverlay').style.display='flex';
+    document.getElementById('loginName').value='';
+    document.getElementById('loginPass').value='';
+    switchAuthTab('login');
+    toast('已退出登录');
+  });
+}
+function enterWorkspace(){
+  var session=loadSession();
+  if(session&&session.name){
+    document.getElementById('authOverlay').style.display='none';
+    document.getElementById('currentUserName').textContent=session.name;
+    initWorkspace();
+    if(USE_CLOUD){
+      syncFromCloud().then(function(){renderRegisteredList();});
+    }
+  }
+}
+
+// ========== Init ==========
+function init(){
+  // Enter key support
+  document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+  document.getElementById('loginName').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('loginPass').focus();});
+  document.getElementById('regPass2').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister();});
+  // Detect cloud mode
+  detectCloud().then(function(isCloud){
+    USE_CLOUD=isCloud;
+    var badge=document.getElementById('syncBadge');
+    var txt=document.getElementById('syncText');
+    if(badge){
+      badge.style.display='inline-flex';
+      if(isCloud){
+        badge.classList.remove('local');
+        txt.textContent='云端同步';
+      }else{
+        badge.classList.add('local');
+        txt.textContent='本地模式';
+      }
+    }
+    if(isCloud){
+      toast('云端同步已连接');
+      syncFromCloud().then(function(){
+        _startApp();
+      });
+    }else{
+      _startApp();
+    }
+  });
+}
+function _startApp(){
+  var session=loadSession();
+  if(session&&session.name){
+    // Verify user still exists
+    var users=loadUsers();
+    var user=users.find(function(u){return u.name===session.name;});
+    if(user){
+      document.getElementById('authOverlay').style.display='none';
+      document.getElementById('currentUserName').textContent=session.name;
+      initWorkspace();
+      return;
+    }else{
+      clearSession();
+    }
+  }
+  // Show auth screen
+  document.getElementById('authOverlay').style.display='flex';
+  renderRegisteredList();
+}
+
+function initWorkspace(){
+  var needSample=false;
+  if(!localStorage.getItem(PREFIX+'clients')){needSample=true;}
+  if(needSample){
+    saveData('clients',SAMPLE_DATA.clients);
+    saveData('projects',SAMPLE_DATA.projects);
+    saveData('visits',SAMPLE_DATA.visits);
+  }
+  clients=loadData('clients');
+  projects=loadData('projects');
+  visits=loadData('visits');
+  reims=loadData('reims');
+  attendance=loadDataObj('attendance');
+  todos=loadData('todos');
+  renderAll();
+}
+
+function getOperator(){
+  var session=loadSession();
+  return (session&&session.name)?session.name:'未署名';
+}
+
+// ========== Render ==========
+function renderAll(){
+  renderWeekTodos();
+  renderStats();
+  renderFunnel();
+  renderClients();
+  renderProjects();
+  renderVisits();
+  renderAlert();
+  renderReimburse();
+}
+
+function renderAlert(){
+  var banner=document.getElementById('alertBanner');
+  var total=clients.length+projects.length+visits.length;
+  if(total===0){
+    banner.innerHTML='';
+    return;
+  }
+  var overdue=getWeekItems().filter(function(i){return i.type==='overdue';});
+  var html='';
+  if(overdue.length>0){
+    html+='<div class="alert-banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>有 <b>'+overdue.length+'</b> 项跟进已逾期，请尽快处理！</div>';
+  }
+  if(total>=30){
+    html+='<div class="alert-banner" style="background:var(--primary-light);border-color:var(--primary);color:var(--primary-dark)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>数据已积累 '+total+' 条，建议导出备份</div>';
+  }
+  banner.innerHTML=html;
+}
+
+function getClientName(id){
+  var c=clients.find(function(x){return x.id===id;});
+  return c?c.name:'(已删除客户)';
+}
+
+function getClient(id){
+  return clients.find(function(x){return x.id===id;});
+}
+
+function fmtDate(d){
+  if(!d)return '';
+  var dt=new Date(d);
+  if(isNaN(dt))return d;
+  var y=dt.getFullYear(),m=String(dt.getMonth()+1).padStart(2,'0'),dd=String(dt.getDate()).padStart(2,'0');
+  return y+'-'+m+'-'+dd;
+}
+
+function todayStr(){
+  var dt=new Date();
+  return dt.getFullYear()+'-'+String(dt.getMonth()+1).padStart(2,'0')+'-'+String(dt.getDate()).padStart(2,'0');
+}
+
+function daysDiff(d){
+  if(!d)return 999;
+  var dt=new Date(d);
+  if(isNaN(dt))return 999;
+  var today=new Date();
+  today.setHours(0,0,0,0);
+  dt.setHours(0,0,0,0);
+  return Math.round((dt-today)/86400000);
+}
+
+function getWeekRange(){
+  var now=new Date();
+  var day=now.getDay()||7;
+  var mon=new Date(now);mon.setDate(now.getDate()-day+1);
+  var sun=new Date(mon);sun.setDate(mon.getDate()+6);
+  return{mon:mon,sun:sun};
+}
+function inThisWeek(dateStr){
+  if(!dateStr)return false;
+  var d=new Date(dateStr);
+  var r=getWeekRange();
+  return d>=r.mon&&d<=new Date(r.sun.getTime()+86399999);
+}
+
+function getWeekItems(){
+  var items=[];
+  var today=todayStr();
+  // Overdue & this week from visits
+  visits.forEach(function(v){
+    if(!v.nextDate)return;
+    if(v.status==='已完成'||v.status==='暂搁置')return;
+    var diff=daysDiff(v.nextDate);
+    if(diff<0){
+      items.push({type:'overdue',title:'跟进：'+getClientName(v.clientId),desc:'上次：'+v.content.substring(0,30)+(v.content.length>30?'...':'')+' | 应跟进：'+fmtDate(v.nextDate),id:v.id,diff:diff,src:'visit'});
+    }else if(diff===0){
+      items.push({type:'today',title:'今日跟进：'+getClientName(v.clientId),desc:'上次：'+v.content.substring(0,30)+(v.content.length>30?'...':''),id:v.id,diff:0,src:'visit'});
+    }else if(inThisWeek(v.nextDate)){
+      items.push({type:'soon',title:'本周跟进：'+getClientName(v.clientId),desc:'预计跟进：'+fmtDate(v.nextDate)+'（'+diff+'天后）',id:v.id,diff:diff,src:'visit'});
+    }
+  });
+  // This week project expected dates
+  projects.forEach(function(p){
+    if(p.stage==='已完成'||p.stage==='完工')return;
+    if(!p.expectedDate)return;
+    var diff=daysDiff(p.expectedDate);
+    if(diff<0){
+      items.push({type:'overdue',title:'项目到期：'+p.name,desc:'预计签约日已过：'+fmtDate(p.expectedDate)+' | 客户：'+getClientName(p.clientId),id:p.id,diff:diff,src:'project'});
+    }else if(inThisWeek(p.expectedDate)){
+      items.push({type:diff===0?'today':'soon',title:'项目临近：'+p.name,desc:'预计签约：'+fmtDate(p.expectedDate)+(diff===0?'（今天）':'（'+diff+'天后）')+' | 客户：'+getClientName(p.clientId),id:p.id,diff:diff,src:'project'});
+    }
+  });
+  // Manual todos for this week (or overdue/no date)
+  todos.forEach(function(t){
+    if(t.done)return;
+    var diff=t.dueDate?daysDiff(t.dueDate):999;
+    var inWeek=t.dueDate?inThisWeek(t.dueDate):true;
+    if(diff<0){
+      items.push({type:'overdue',title:t.title,desc:'已逾期'+(t.dueDate?(' · 截止：'+fmtDate(t.dueDate)):'')+(t.desc?(' · '+t.desc):''),id:t.id,diff:diff,src:'todo'});
+    }else if(diff===0){
+      items.push({type:'today',title:t.title,desc:'今天截止'+(t.desc?(' · '+t.desc):''),id:t.id,diff:0,src:'todo'});
+    }else if(inWeek){
+      items.push({type:'soon',title:t.title,desc:'截止：'+fmtDate(t.dueDate)+'（'+diff+'天后）'+(t.desc?(' · '+t.desc):''),id:t.id,diff:diff,src:'todo'});
+    }
+  });
+  items.sort(function(a,b){return a.diff-b.diff;});
+  items=items.filter(function(i){return !isDismissed(i.id,i.src);});
+  return items;
+}
+
+function renderWeekTodos(){
+  var items=getWeekItems();
+  var el=document.getElementById('todayList');
+  document.getElementById('todayCount').textContent=items.length+'项';
+  if(items.length===0){
+    el.innerHTML='<div class="today-empty">本周暂无待办事项</div>';
+    return;
+  }
+  var html='';
+  items.forEach(function(item){
+    var tagClass='',tagText='';
+    if(item.type==='overdue'){tagClass='tag-overdue';tagText='逾期';}
+    else if(item.type==='today'){tagClass='tag-today';tagText='今天';}
+    else{tagClass='tag-soon';tagText='本周';}
+    html+='<div class="today-item'+(item.type==='overdue'?' overdue':'')+'">';
+    if(item.src==='todo'){
+      html+='<div class="todo-check" onclick="toggleTodoDone(\''+item.id+'\')"></div>';
+    }else{
+      html+='<div class="today-item-tag '+tagClass+'">'+tagText+'</div>';
+    }
+    html+='<div class="today-item-body">';
+    html+='<div class="today-item-title">'+item.title+'</div>';
+    html+='<div class="today-item-desc">'+item.desc+'</div>';
+    html+='</div>';
+    html+='<div class="today-item-actions">';
+    if(item.src==='visit'){
+      html+='<button class="today-item-btn" onclick="quickDoneVisit(\''+item.id+'\')">已办</button>';
+    }else if(item.src==='todo'){
+      html+='<button class="today-item-btn" onclick="toggleTodoDone(\''+item.id+'\')">已办</button>';
+    }else if(item.src==='project'){
+      html+='<button class="today-item-btn" onclick="dismissWeekItem(\''+item.id+'\',\'project\')">已办</button>';
+    }
+    html+='</div>';
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+function renderStats(){
+  document.getElementById('statClients').textContent=clients.length;
+  var ga=clients.filter(function(c){return c.grade==='A级（重要）';}).length;
+  var gb=clients.filter(function(c){return c.grade==='B级（一般）';}).length;
+  document.getElementById('statClientsSub').textContent='A级'+ga+' B级'+gb;
+
+  var active=projects.filter(function(p){return p.stage!=='已完成'&&p.stage!=='完工';}).length;
+  document.getElementById('statProjects').textContent=active;
+  var signed=projects.filter(function(p){return p.stage==='签约'||p.stage==='实施'||p.stage==='完工';}).length;
+  document.getElementById('statProjectsSub').textContent='已签约 '+signed;
+
+  var totalAmt=0,signedAmt=0;
+  projects.forEach(function(p){
+    var amt=parseFloat(p.amount)||0;
+    if(p.stage!=='已完成'&&p.stage!=='完工')totalAmt+=amt;
+    if(p.stage==='签约'||p.stage==='实施'||p.stage==='完工')signedAmt+=amt;
+  });
+  document.getElementById('statAmount').textContent='¥'+(totalAmt-signedAmt)+'万';
+  document.getElementById('statAmountSub').textContent='含已签 ¥'+signedAmt+'万';
+
+  var now=new Date();
+  var monthVisits=visits.filter(function(v){
+    var d=new Date(v.date);
+    return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();
+  }).length;
+  var todayVisits=visits.filter(function(v){return v.date===todayStr();}).length;
+  document.getElementById('statVisits').textContent=monthVisits;
+  document.getElementById('statVisitsSub').textContent='今日 '+todayVisits;
+}
+
+function renderFunnel(){
+  var stages=STAGE_OPTIONS.concat([STAGE_DONE]);
+  var html='';
+  stages.forEach(function(s){
+    var count=projects.filter(function(p){return p.stage===s;}).length;
+    var cls='';
+    if(s==='签约'||s==='实施')cls='s-signed';
+    if(s===STAGE_DONE)cls='s-done';
+    html+='<div class="funnel-item'+(count>0?' active':'')+'">';
+    html+='<div class="fn-count">'+count+'</div>';
+    html+='<div class="fn-label">'+s+'</div>';
+    html+='</div>';
+  });
+  document.getElementById('funnelWrap').innerHTML=html;
+}
+
+function renderClients(){
+  var el=document.getElementById('clientList');
+  if(clients.length===0){
+    el.innerHTML='<div class="list-empty">暂无客户，点击「添加客户」开始</div>';
+    return;
+  }
+  var sorted=clients.slice().sort(function(a,b){return(b.lastVisit||'').localeCompare(a.lastVisit||'');});
+  var html='';
+  sorted.forEach(function(c){
+    var days=daysDiff(c.lastVisit);
+    var overdueClass='';
+    var visitInfo='最近拜访：'+(c.lastVisit?fmtDate(c.lastVisit):'未拜访');
+    if(days<-30&&c.lastVisit)overdueClass=' style="border-left:3px solid var(--red)"';
+    html+='<div class="list-item"'+overdueClass+'>';
+    html+='<div class="list-item-row">';
+    html+='<div class="list-item-main">';
+    html+='<div class="list-item-title">'+c.name+'</div>';
+    html+='<div class="list-item-meta">';
+    html+='<span class="badge badge-'+c.grade.charAt(0)+'">'+c.grade+'</span>';
+    if(c.region)html+='<span class="badge badge-region">'+c.region+'</span>';
+    if(c.operator)html+='<span class="badge badge-op">'+c.operator+'</span>';
+    html+='</div>';
+    html+='<div class="list-item-desc">'+c.contact+' · '+c.phone+' · '+visitInfo+'</div>';
+    if(c.remark)html+='<div class="list-item-desc">备注：'+c.remark+'</div>';
+    html+='</div>';
+    html+='<div class="list-item-actions">';
+    html+='<button class="icon-btn" onclick="addVisitForClient(\''+c.id+'\')" title="记录拜访"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>';
+    html+='<button class="icon-btn" onclick="editClient(\''+c.id+'\')" title="编辑"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></button>';
+    html+='<button class="icon-btn danger" onclick="deleteClient(\''+c.id+'\')" title="删除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+    html+='</div>';
+    html+='</div>';
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+function renderProjects(){
+  var el=document.getElementById('projectList');
+  if(projects.length===0){
+    el.innerHTML='<div class="list-empty">暂无项目，点击「添加项目」开始</div>';
+    return;
+  }
+  var sorted=projects.slice().sort(function(a,b){
+    var sa=STAGE_OPTIONS.concat([STAGE_DONE]).indexOf(a.stage);
+    var sb=STAGE_OPTIONS.concat([STAGE_DONE]).indexOf(b.stage);
+    return sa-sb;
+  });
+  var html='';
+  sorted.forEach(function(p){
+    var cls='';
+    if(p.stage==='签约'||p.stage==='实施')cls='s-signed';
+    if(p.stage==='完工'||p.stage===STAGE_DONE)cls='s-done';
+    var amt=p.amount?('¥'+p.amount+'万'):'未报价';
+    var diff=daysDiff(p.expectedDate);
+    var dateInfo=p.expectedDate?('预计签约：'+fmtDate(p.expectedDate)):'无预计日期';
+    if(diff<0&&p.stage!=='实施'&&p.stage!==STAGE_DONE&&p.expectedDate)dateInfo+=' <span style="color:var(--red);font-weight:600">（已逾期'+(-diff)+'天）</span>';
+    else if(diff>=0&&diff<=7&&p.expectedDate&&p.stage!=='实施'&&p.stage!==STAGE_DONE)dateInfo+=' <span style="color:var(--orange)">（'+diff+'天后）</span>';
+    html+='<div class="list-item">';
+    html+='<div class="list-item-row">';
+    html+='<div class="list-item-main">';
+    html+='<div class="list-item-title">'+p.name+'</div>';
+    html+='<div class="list-item-meta">';
+    html+='<span class="badge badge-stage'+(cls?' '+cls:'')+'">'+p.stage+'</span>';
+    html+='<span class="badge badge-amount'+(p.amount?'':' zero')+'">'+amt+'</span>';
+    if(p.gradeAssess){
+      var ga=p.gradeAssess.charAt(0);
+      var gaCls={'A':'badge-S','B':'badge-A','C':'badge-B'}[ga]||'badge-C';
+      html+='<span class="badge '+gaCls+'">'+p.gradeAssess+'</span>';
+    }
+    if(p.owner)html+='<span class="badge badge-region">责任人：'+esc(p.owner)+'</span>';
+    if(p.leader)html+='<span class="badge" style="background:var(--green-light);color:var(--green)">领导：'+esc(p.leader)+'</span>';
+    if(p.operator)html+='<span class="badge badge-op">'+p.operator+'</span>';
+    html+='</div>';
+    html+='<div class="list-item-desc">客户：'+getClientName(p.clientId)+' · '+dateInfo+'</div>';
+    if(p.staffNeed)html+='<div class="list-item-desc">预计人员需求：'+esc(p.staffNeed)+'</div>';
+    if(p.remark)html+='<div class="list-item-desc">进展：'+p.remark+'</div>';
+    html+='</div>';
+    html+='<div class="list-item-actions">';
+    html+='<button class="icon-btn" onclick="editProject(\''+p.id+'\')" title="编辑"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></button>';
+    html+='<button class="icon-btn danger" onclick="deleteProject(\''+p.id+'\')" title="删除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+    html+='</div>';
+    html+='</div>';
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+function renderVisits(){
+  var el=document.getElementById('visitList');
+  if(visits.length===0){
+    el.innerHTML='<div class="list-empty">暂无拜访记录，点击「记录拜访」开始</div>';
+    return;
+  }
+  var sorted=visits.slice().sort(function(a,b){return(b.date||'').localeCompare(a.date||'');});
+  var html='';
+  sorted.forEach(function(v){
+    var statusBadge='';
+    var statusColor={ '待跟进':'badge-B','进行中':'badge-stage','已完成':'badge-stage s-done','暂搁置':'badge-C'};
+    var sc=statusColor[v.status]||'badge-B';
+    statusBadge='<span class="badge '+sc+'">'+v.status+'</span>';
+    var nextInfo=v.nextDate?('下次跟进：'+fmtDate(v.nextDate)):'';
+    var diff=daysDiff(v.nextDate);
+    if(v.nextDate&&v.status==='待跟进'&&diff<0)nextInfo+=' <span style="color:var(--red);font-weight:600">（逾期'+(-diff)+'天）</span>';
+    html+='<div class="list-item">';
+    html+='<div class="list-item-row">';
+    html+='<div class="list-item-main">';
+    html+='<div class="list-item-title">'+getClientName(v.clientId)+'</div>';
+    html+='<div class="list-item-meta">';
+    html+='<span class="badge badge-region">'+fmtDate(v.date)+'</span>';
+    html+='<span class="badge badge-B">'+v.method+'</span>';
+    if(v.operator)html+='<span class="badge badge-op">'+v.operator+'</span>';
+    html+=statusBadge;
+    html+='</div>';
+    html+='<div class="list-item-desc">'+v.content+'</div>';
+    if(nextInfo)html+='<div class="list-item-desc">'+nextInfo+'</div>';
+    html+='</div>';
+    html+='<div class="list-item-actions">';
+    if(v.status!=='已完成'&&v.status!=='暂搁置'){
+      html+='<button class="icon-btn" onclick="quickDoneVisit(\''+v.id+'\')" title="标记已跟进" style="color:var(--green)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></button>';
+    }
+    html+='<button class="icon-btn" onclick="editVisit(\''+v.id+'\')" title="编辑"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></button>';
+    html+='<button class="icon-btn danger" onclick="deleteVisit(\''+v.id+'\')" title="删除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>';
+    html+='</div>';
+    html+='</div>';
+    html+='</div>';
+  });
+  el.innerHTML=html;
+}
+
+// ========== Tab switch ==========
+function switchMain(view){
+  document.querySelectorAll('.main-tab').forEach(function(t){t.classList.remove('active');});
+  var mt=document.querySelector('.main-tab:nth-child('+(view==='project'?1:view==='reimburse'?2:3)+')');
+  if(mt)mt.classList.add('active');
+  document.getElementById('view-project').classList.add('hidden');
+  document.getElementById('view-reimburse').classList.add('hidden');
+  document.getElementById('view-logistics').classList.add('hidden');
+  document.getElementById('view-'+view).classList.remove('hidden');
+  document.querySelectorAll('.bottom-nav-item').forEach(function(b){b.classList.remove('active');});
+  var bi=view==='project'?0:view==='reimburse'?1:2;
+  var bn=document.querySelectorAll('.bottom-nav-item')[bi];
+  if(bn)bn.classList.add('active');
+  if(view==='reimburse'){renderReimburse();}
+  if(view==='logistics'){renderAttendance();}
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.sub-tab').forEach(function(t){t.classList.remove('active');});
+  var st=document.querySelector('.sub-tab[data-tab="'+tab+'"]');
+  if(st)st.classList.add('active');
+  document.getElementById('panel-clients').classList.add('hidden');
+  document.getElementById('panel-projects').classList.add('hidden');
+  document.getElementById('panel-visits').classList.add('hidden');
+  document.getElementById('panel-'+tab).classList.remove('hidden');
+}
+
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
+function scrollToPanel(id){
+  switchTab(id.replace('panel-',''));
+  setTimeout(function(){var el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+
+// ========== Forms ==========
+function showForm(type,id){
+  var formId=type+'Form';
+  var el=document.getElementById(formId);
+  if(!el.classList.contains('hidden')){el.classList.add('hidden');return;}
+  // hide all forms
+  ['clientForm','projectForm','visitForm'].forEach(function(f){document.getElementById(f).classList.add('hidden');});
+  if(type==='client')renderClientForm(id);
+  if(type==='project')renderProjectForm(id);
+  if(type==='visit')renderVisitForm(id);
+  el.classList.remove('hidden');
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function renderClientForm(id){
+  var c=id?getClient(id):{};
+  var html='<div class="form-grid">';
+  html+='<div class="form-field"><label>客户名称 *</label><input type="text" id="cf_name" value="'+esc(c.name||'')+'" placeholder="如：广西XX设计院"></div>';
+  html+='<div class="form-field"><label>联系人</label><input type="text" id="cf_contact" value="'+esc(c.contact||'')+'" placeholder="如：王工"></div>';
+  html+='<div class="form-field"><label>联系电话</label><input type="tel" id="cf_phone" value="'+esc(c.phone||'')+'" placeholder="手机号"></div>';
+  html+='<div class="form-field"><label>所在地区</label><input type="text" id="cf_region" value="'+esc(c.region||'')+'" placeholder="如：南宁/桂林/柳州"></div>';
+  html+='<div class="form-field"><label>客户等级</label><select id="cf_grade">';
+  GRADE_OPTIONS.forEach(function(g){html+='<option value="'+g+'"'+(c.grade===g?' selected':'')+'>'+g+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field"><label>最近拜访日期</label><input type="date" id="cf_lastVisit" value="'+(c.lastVisit||'')+'"></div>';
+  html+='<div class="form-field full"><label>备注</label><textarea id="cf_remark" placeholder="客户特点、需求方向、注意事项等">'+esc(c.remark||'')+'</textarea></div>';
+  html+='</div>';
+  html+='<div class="form-actions">';
+  html+='<button class="btn btn-primary" onclick="saveClient(\''+(id||'')+'\')">保存</button>';
+  html+='<button class="btn btn-secondary" onclick="document.getElementById(\'clientForm\').classList.add(\'hidden\')">取消</button>';
+  html+='</div>';
+  document.getElementById('clientForm').innerHTML=html;
+}
+
+function renderProjectForm(id){
+  var p=id?projects.find(function(x){return x.id===id;}):{};
+  var html='<div class="form-grid">';
+  html+='<div class="form-field full"><label>项目名称 *</label><input type="text" id="pf_name" value="'+esc(p.name||'')+'" placeholder="如：南宁XX路勘测"></div>';
+  html+='<div class="form-field"><label>关联客户 *</label><select id="pf_clientId">';
+  html+='<option value="">请选择客户</option>';
+  clients.forEach(function(c){html+='<option value="'+c.id+'"'+(p.clientId===c.id?' selected':'')+'>'+esc(c.name)+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field"><label>项目阶段</label><select id="pf_stage">';
+  STAGE_OPTIONS.concat([STAGE_DONE]).forEach(function(s){html+='<option value="'+s+'"'+(p.stage===s?' selected':'')+'>'+s+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field"><label>预计金额（万元）</label><input type="number" id="pf_amount" value="'+(p.amount||'')+'" placeholder="如：80" step="0.1"></div>';
+  html+='<div class="form-field"><label>预计签约日期</label><input type="date" id="pf_expectedDate" value="'+(p.expectedDate||'')+'"></div>';
+  html+='<div class="form-field"><label>分级评定</label><select id="pf_gradeAssess">';
+  ['A级（重点项目）','B级（一般项目）','C级（跟踪项目）'].forEach(function(g){html+='<option value="'+g+'"'+(p.gradeAssess===g?' selected':'')+'>'+g+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field"><label>预计人员需求</label><input type="text" id="pf_staffNeed" value="'+esc(p.staffNeed||'')+'" placeholder="如：测绘5人 / 工程师3人"></div>';
+  var owners=[],leaders=[];
+  projects.forEach(function(pr){
+    if(pr.owner&&owners.indexOf(pr.owner)===-1)owners.push(pr.owner);
+    if(pr.leader&&leaders.indexOf(pr.leader)===-1)leaders.push(pr.leader);
+  });
+  html+='<div class="form-field"><label>责任人</label><input type="text" id="pf_owner" list="dl_owner" value="'+esc(p.owner||'')+'" placeholder="项目实施责任人"><datalist id="dl_owner">'+owners.map(function(o){return '<option value="'+esc(o)+'">';}).join('')+'</datalist></div>';
+  html+='<div class="form-field"><label>责任领导</label><input type="text" id="pf_leader" list="dl_leader" value="'+esc(p.leader||'')+'" placeholder="项目分管领导"><datalist id="dl_leader">'+leaders.map(function(l){return '<option value="'+esc(l)+'">';}).join('')+'</datalist></div>';
+  html+='<div class="form-field full"><label>当前进展</label><textarea id="pf_remark" placeholder="进展说明、关键节点、下一步计划">'+esc(p.remark||'')+'</textarea></div>';
+  html+='</div>';
+  html+='<div class="form-actions">';
+  html+='<button class="btn btn-primary" onclick="saveProject(\''+(id||'')+'\')">保存</button>';
+  html+='<button class="btn btn-secondary" onclick="document.getElementById(\'projectForm\').classList.add(\'hidden\')">取消</button>';
+  html+='</div>';
+  document.getElementById('projectForm').innerHTML=html;
+}
+
+function renderVisitForm(id,clientId){
+  var v=id?visits.find(function(x){return x.id===id;}):{};
+  var html='<div class="form-grid">';
+  html+='<div class="form-field full"><label>拜访客户 *</label><select id="vf_clientId">';
+  html+='<option value="">请选择客户</option>';
+  clients.forEach(function(c){html+='<option value="'+c.id+'"'+((v.clientId===c.id||clientId===c.id)?' selected':'')+'>'+esc(c.name)+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field"><label>拜访日期 *</label><input type="date" id="vf_date" value="'+(v.date||todayStr())+'"></div>';
+  html+='<div class="form-field"><label>拜访方式</label><select id="vf_method">';
+  VISIT_METHODS.forEach(function(m){html+='<option value="'+m+'"'+(v.method===m?' selected':'')+'>'+m+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field"><label>跟进状态</label><select id="vf_status">';
+  FOLLOW_STATUS.forEach(function(s){html+='<option value="'+s+'"'+(v.status===s?' selected':'')+'>'+s+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field"><label>下次跟进日期</label><input type="date" id="vf_nextDate" value="'+(v.nextDate||'')+'"></div>';
+  html+='<div class="form-field full"><label>沟通内容 *</label><textarea id="vf_content" placeholder="沟通了什么、对方反馈、达成的共识">'+esc(v.content||'')+'</textarea></div>';
+  html+='</div>';
+  html+='<div class="form-actions">';
+  html+='<button class="btn btn-primary" onclick="saveVisit(\''+(id||'')+'\')">保存</button>';
+  html+='<button class="btn btn-secondary" onclick="document.getElementById(\'visitForm\').classList.add(\'hidden\')">取消</button>';
+  html+='</div>';
+  document.getElementById('visitForm').innerHTML=html;
+}
+
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function genId(){return Date.now().toString(36)+Math.random().toString(36).substring(2,6);}
+
+// ========== Save ==========
+function saveClient(id){
+  var name=document.getElementById('cf_name').value.trim();
+  if(!name){toast('请填写客户名称');return;}
+  var data={
+    name:name,
+    contact:document.getElementById('cf_contact').value.trim(),
+    phone:document.getElementById('cf_phone').value.trim(),
+    region:document.getElementById('cf_region').value,
+    grade:document.getElementById('cf_grade').value,
+    lastVisit:document.getElementById('cf_lastVisit').value,
+    remark:document.getElementById('cf_remark').value.trim(),
+    operator:getOperator(),
+    created:id?(getClient(id).created||todayStr()):todayStr()
+  };
+  if(id){
+    var idx=clients.findIndex(function(c){return c.id===id;});
+    data.id=id;
+    clients[idx]=Object.assign(clients[idx],data);
+  }else{
+    data.id=genId();
+    clients.push(data);
+  }
+  saveData('clients',clients);
+  document.getElementById('clientForm').classList.add('hidden');
+  renderAll();
+  toast(id?'客户已更新':'客户已添加');
+}
+
+function saveProject(id){
+  var name=document.getElementById('pf_name').value.trim();
+  var clientId=document.getElementById('pf_clientId').value;
+  if(!name){toast('请填写项目名称');return;}
+  if(!clientId){toast('请选择关联客户');return;}
+  var data={
+    name:name,
+    clientId:clientId,
+    stage:document.getElementById('pf_stage').value,
+    amount:document.getElementById('pf_amount').value.trim(),
+    expectedDate:document.getElementById('pf_expectedDate').value,
+    gradeAssess:document.getElementById('pf_gradeAssess').value,
+    staffNeed:document.getElementById('pf_staffNeed').value.trim(),
+    owner:document.getElementById('pf_owner').value.trim(),
+    leader:document.getElementById('pf_leader').value.trim(),
+    remark:document.getElementById('pf_remark').value.trim(),
+    operator:getOperator(),
+    created:id?(projects.find(function(p){return p.id===id;}).created||todayStr()):todayStr()
+  };
+  if(id){
+    var idx=projects.findIndex(function(p){return p.id===id;});
+    data.id=id;
+    projects[idx]=Object.assign(projects[idx],data);
+  }else{
+    data.id=genId();
+    projects.push(data);
+  }
+  saveData('projects',projects);
+  document.getElementById('projectForm').classList.add('hidden');
+  renderAll();
+  toast(id?'项目已更新':'项目已添加');
+}
+
+function saveVisit(id){
+  var clientId=document.getElementById('vf_clientId').value;
+  var content=document.getElementById('vf_content').value.trim();
+  var date=document.getElementById('vf_date').value;
+  if(!clientId){toast('请选择拜访客户');return;}
+  if(!content){toast('请填写沟通内容');return;}
+  if(!date){toast('请选择拜访日期');return;}
+  var data={
+    clientId:clientId,
+    date:date,
+    method:document.getElementById('vf_method').value,
+    status:document.getElementById('vf_status').value,
+    nextDate:document.getElementById('vf_nextDate').value,
+    content:content,
+    operator:getOperator(),
+    created:id?(visits.find(function(v){return v.id===id;}).created||todayStr()):todayStr()
+  };
+  if(id){
+    var idx=visits.findIndex(function(v){return v.id===id;});
+    data.id=id;
+    visits[idx]=Object.assign(visits[idx],data);
+  }else{
+    data.id=genId();
+    visits.push(data);
+  }
+  // Update client's lastVisit
+  var c=getClient(clientId);
+  if(c){
+    if(!c.lastVisit||date>c.lastVisit){
+      c.lastVisit=date;
+      saveData('clients',clients);
+    }
+  }
+  saveData('visits',visits);
+  document.getElementById('visitForm').classList.add('hidden');
+  renderAll();
+  toast(id?'拜访记录已更新':'拜访记录已添加');
+}
+
+function addVisitForClient(clientId){
+  switchTab('visits');
+  renderVisitForm(null,clientId);
+  document.getElementById('visitForm').classList.remove('hidden');
+  document.getElementById('visitForm').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function editClient(id){showForm('client',id);}
+function editProject(id){showForm('project',id);}
+function editVisit(id){showForm('visit',id);}
+
+function deleteClient(id){
+  var c=getClient(id);
+  showModal('确认删除','确定要删除客户「'+esc(c.name)+'」吗？<br>关联的项目和拜访记录将保留但显示「已删除客户」。',function(){
+    clients=clients.filter(function(c){return c.id!==id;});
+    saveData('clients',clients);
+    renderAll();
+    toast('客户已删除');
+  });
+}
+function deleteProject(id){
+  var p=projects.find(function(x){return x.id===id;});
+  showModal('确认删除','确定要删除项目「'+esc(p.name)+'」吗？',function(){
+    projects=projects.filter(function(p){return p.id!==id;});
+    saveData('projects',projects);
+    renderAll();
+    toast('项目已删除');
+  });
+}
+function deleteVisit(id){
+  showModal('确认删除','确定要删除这条拜访记录吗？',function(){
+    visits=visits.filter(function(v){return v.id!==id;});
+    saveData('visits',visits);
+    renderAll();
+    toast('拜访记录已删除');
+  });
+}
+
+function quickDoneVisit(id){
+  var v=visits.find(function(x){return x.id===id;});
+  if(v){v.status='已完成';saveData('visits',visits);renderAll();toast('已标记为已完成');}
+}
+
+// ========== Todo ==========
+function showTodoForm(id){
+  var el=document.getElementById('todoFormWrap');
+  if(!el.classList.contains('hidden')){el.classList.add('hidden');return;}
+  var t=id?todos.find(function(x){return x.id===id;}):{};
+  var html='<div class="form-grid">';
+  html+='<div class="form-field full"><label>待办事项 *</label><input type="text" id="tf_title" value="'+esc(t.title||'')+'" placeholder="如：拜访南宁交投集团"></div>';
+  html+='<div class="form-field"><label>截止日期</label><input type="date" id="tf_dueDate" value="'+(t.dueDate||todayStr())+'"></div>';
+  html+='<div class="form-field"><label>优先级</label><select id="tf_priority">';
+  ['高','中','低'].forEach(function(p){html+='<option value="'+p+'"'+(t.priority===p?' selected':'')+'>'+p+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field full"><label>备注</label><textarea id="tf_desc" placeholder="事项说明、关联客户等">'+esc(t.desc||'')+'</textarea></div>';
+  html+='</div>';
+  html+='<div class="form-actions">';
+  html+='<button class="btn btn-primary" onclick="saveTodo(\''+(id||'')+'\')">保存</button>';
+  html+='<button class="btn btn-secondary" onclick="document.getElementById(\'todoFormWrap\').classList.add(\'hidden\')">取消</button>';
+  html+='</div>';
+  el.innerHTML=html;
+  el.classList.remove('hidden');
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function saveTodo(id){
+  var title=document.getElementById('tf_title').value.trim();
+  if(!title){toast('请填写待办事项');return;}
+  var data={title:title,dueDate:document.getElementById('tf_dueDate').value,priority:document.getElementById('tf_priority').value,desc:document.getElementById('tf_desc').value.trim(),done:false,operator:getOperator(),created:id?(todos.find(function(x){return x.id===id;}).created||todayStr()):todayStr()};
+  if(id){data.id=id;var idx=todos.findIndex(function(x){return x.id===id;});todos[idx]=data;}
+  else{data.id='t'+Date.now();todos.unshift(data);}
+  saveData('todos',todos);
+  document.getElementById('todoFormWrap').classList.add('hidden');
+  renderWeekTodos();
+  toast(id?'已更新待办':'已添加待办');
+}
+
+function toggleTodoDone(id){
+  var t=todos.find(function(x){return x.id===id;});
+  if(t){t.done=!t.done;saveData('todos',todos);renderWeekTodos();toast(t.done?'已完成':'已取消完成');}
+}
+
+function deleteTodo(id){
+  showModal('删除待办','确认删除该待办事项？',function(){
+    todos=todos.filter(function(x){return x.id!==id;});
+    saveData('todos',todos);
+    renderWeekTodos();
+    toast('已删除');
+  });
+}
+
+// ========== Export / Import ==========
+function exportJSON(){
+  var data={
+    version:'1.3',
+    exportDate:new Date().toISOString(),
+    operator:getOperator(),
+    users:loadUsers(),
+    clients:clients,
+    projects:projects,
+    visits:visits,
+    reims:reims,
+    attendance:attendance,
+    todos:todos
+  };
+  var blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='中交华南勘测广西_'+todayStr()+'.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('已导出 '+clients.length+'客户/'+projects.length+'项目/'+visits.length+'拜访/'+reims.length+'报销/'+todos.length+'待办/'+loadUsers().length+'用户');
+}
+
+function exportExcel(){
+  function xcell(v){var n=parseFloat(v);return !isNaN(n)&&String(v)===String(n)?'<Cell><Data ss:Type="Number">'+n+'</Data></Cell>':'<Cell><Data ss:Type="String">'+esc(v==null?'':v)+'</Data></Cell>';}
+  function xrow(arr,header){var cells=arr.map(function(v){return header?'<Cell ss:StyleID="hdr"><Data ss:Type="String">'+esc(v)+'</Data></Cell>':xcell(v);}).join('');return '<Row>'+cells+'</Row>';}
+  function xsheet(name,headers,rows){
+    var s='<Worksheet ss:Name="'+esc(name)+'"><Table>\n';
+    s+=xrow(headers,true);
+    rows.forEach(function(r){s+=xrow(r,false);});
+    s+='</Table></Worksheet>\n';
+    return s;
+  }
+  var xml='<?xml version="1.0" encoding="UTF-8"?>\n<?mso-application progid="Excel.Sheet"?>\n';
+  xml+='<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n';
+  xml+='<Styles><Style ss:ID="hdr"><Font ss:Bold="1" ss:Size="11"/><Interior ss:Color="#DDEBF7" ss:Pattern="Solid"/><Alignment ss:Vertical="Center" ss:Horizontal="Center"/></Style></Styles>\n';
+  /* 客户管理 */
+  xml+=xsheet('客户管理',['客户名称','联系人','电话','区域','分级','备注','最近拜访','操作人','创建日期'],
+    clients.map(function(c){return [c.name,c.contact,c.phone,c.region,c.grade,c.remark,c.lastVisit,c.operator,c.created];}));
+  /* 项目跟踪 */
+  xml+=xsheet('项目跟踪',['项目名称','客户名称','阶段','金额(万)','预计日期','分级评定','人员需求','责任人','责任领导','备注','操作人','创建日期'],
+    projects.map(function(p){var cn=clients.find(function(c){return c.id===p.clientId;});return [p.name,cn?cn.name:'',p.stage,p.amount,p.expectedDate,p.gradeAssess,p.staffNeed,p.owner,p.leader,p.remark,p.operator,p.created];}));
+  /* 拜访记录 */
+  xml+=xsheet('拜访记录',['客户名称','拜访日期','拜访方式','拜访内容','下次跟进','状态','操作人','创建日期'],
+    visits.map(function(v){var cn=clients.find(function(c){return c.id===v.clientId;});return [cn?cn.name:'',v.date,v.method,v.content,v.nextDate,v.status,v.operator,v.created];}));
+  /* 报销管理 */
+  xml+=xsheet('报销管理',['事由/说明','类别','金额(元)','日期','发票张数','状态','备注','操作人','创建日期'],
+    reims.map(function(r){return [r.title,r.type,r.amount,r.date,r.invoices,r.status,r.remark,r.operator,r.created];}));
+  /* 待办事项 */
+  xml+=xsheet('待办事项',['待办事项','截止日期','优先级','状态','备注','操作人','创建日期'],
+    todos.map(function(t){return [t.title,t.dueDate,t.priority,t.done?'已完成':'未完成',t.desc,t.operator,t.created];}));
+  /* 考勤记录 */
+  Object.keys(attendance).sort().forEach(function(mk){
+    var md=attendance[mk];if(!md||!md.persons||md.persons.length===0)return;
+    var parts=mk.split('-');var year=parseInt(parts[0]);var month=parseInt(parts[1]);
+    var dim=new Date(year,month,0).getDate();
+    var hdr=['姓名'];for(var d=1;d<=dim;d++)hdr.push(d+'日');
+    var rows=md.persons.map(function(pn){var rec=(md.records||{})[pn]||{};var row=[pn];for(var d=1;d<=dim;d++)row.push(rec[d]||'');return row;});
+    xml+=xsheet('考勤_'+mk,hdr,rows);
+  });
+  xml+='</Workbook>';
+  var blob=new Blob([xml],{type:'application/vnd.ms-excel;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');a.href=url;
+  a.download='中交华南勘测广西_数据导出_'+todayStr()+'.xls';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  toast('已导出Excel：'+clients.length+'客户/'+projects.length+'项目/'+visits.length+'拜访/'+reims.length+'报销');
+}
+
+function importJSON(event){
+  var file=event.target.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      var data=JSON.parse(e.target.result);
+      if(!data.clients&&!data.projects&&!data.visits&&!data.reims&&!data.todos){toast('文件格式不正确');return;}
+      showModal('导入确认','即将导入：<br>用户 '+((data.users||[]).length)+' 个<br>客户 '+((data.clients||[]).length)+' 条<br>项目 '+((data.projects||[]).length)+' 条<br>拜访 '+((data.visits||[]).length)+' 条<br>报销 '+((data.reims||[]).length)+' 条<br>待办 '+((data.todos||[]).length)+' 条<br>考勤 '+(data.attendance?Object.keys(data.attendance).length+'月':'未含')+'<br><br><b style="color:var(--red)">注意：将覆盖当前所有数据！</b><br><br>如果是同事同步给你的数据，建议覆盖。',function(){
+        if(data.users){
+          var existing=loadUsers();
+          data.users.forEach(function(u){
+            if(!existing.find(function(e){return e.name===u.name;}))existing.push(u);
+          });
+          saveUsers(existing);
+          renderRegisteredList();
+        }
+        if(data.clients)clients=data.clients;
+        if(data.projects)projects=data.projects;
+        if(data.visits)visits=data.visits;
+        if(data.reims)reims=data.reims;
+        if(data.attendance)attendance=data.attendance;
+        if(data.todos)todos=data.todos;
+        saveData('clients',clients);
+        saveData('projects',projects);
+        saveData('visits',visits);
+        saveData('reims',reims);
+        saveData('attendance',attendance);
+        saveData('todos',todos);
+        renderAll();
+        toast('导入成功');
+      });
+    }catch(err){
+      toast('文件解析失败：'+err.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value='';
+}
+
+function confirmClear(){
+  showModal('清空全部数据','<b style="color:var(--red)">⚠️ 此操作不可撤销！</b><br><br>将清空全部客户（'+clients.length+'）、项目（'+projects.length+'）、拜访记录（'+visits.length+'）。<br><br>建议先导出备份！',function(){
+    clients=[];projects=[];visits=[];
+    saveData('clients',clients);
+    saveData('projects',projects);
+    saveData('visits',visits);
+    renderAll();
+    toast('全部数据已清空');
+  });
+}
+
+// ========== Reimburse ==========
+var REIM_TYPES=['差旅费','办公费','招待费','交通费','通讯费','材料费','其他'];
+var REIM_STATUS=['有票','无票'];
+function fmtMoney(n){n=parseFloat(n)||0;return n.toLocaleString('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+
+function showReimForm(id){
+  var el=document.getElementById('reimForm');
+  if(!el.classList.contains('hidden')){el.classList.add('hidden');return;}
+  var r=id?reims.find(function(x){return x.id===id;}):{};
+  var html='<div class="form-grid">';
+  html+='<div class="form-field full"><label>事由/说明 *</label><input type="text" id="rf_title" value="'+esc(r.title||'')+'" placeholder="如：南宁出差差旅费"></div>';
+  html+='<div class="form-field"><label>报销类别</label><select id="rf_type">';
+  REIM_TYPES.forEach(function(t){html+='<option value="'+t+'"'+(r.type===t?' selected':'')+'>'+t+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field"><label>金额（元）*</label><input type="number" id="rf_amount" value="'+(r.amount||'')+'" placeholder="如：2560" step="0.01"></div>';
+  html+='<div class="form-field"><label>报销日期</label><input type="date" id="rf_date" value="'+(r.date||todayStr())+'"></div>';
+  html+='<div class="form-field"><label>发票张数</label><input type="number" id="rf_invoices" value="'+(r.invoices||'')+'" placeholder="如：8"></div>';
+  html+='<div class="form-field"><label>状态</label><select id="rf_status">';
+  REIM_STATUS.forEach(function(s){html+='<option value="'+s+'"'+(r.status===s?' selected':'')+'>'+s+'</option>';});
+  html+='</select></div>';
+  html+='<div class="form-field full"><label>备注</label><textarea id="rf_remark" placeholder="费用明细、出差地点等">'+esc(r.remark||'')+'</textarea></div>';
+  html+='</div>';
+  html+='<div class="form-actions">';
+  html+='<button class="btn btn-primary" onclick="saveReim(\''+(id||'')+'\')">保存</button>';
+  html+='<button class="btn btn-secondary" onclick="document.getElementById(\'reimForm\').classList.add(\'hidden\')">取消</button>';
+  html+='</div>';
+  el.innerHTML=html;
+  el.classList.remove('hidden');
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+function saveReim(id){
+  var title=document.getElementById('rf_title').value.trim();
+  var amount=parseFloat(document.getElementById('rf_amount').value);
+  if(!title){toast('请填写事由');return;}
+  if(!amount||amount<=0){toast('请填写有效金额');return;}
+  var data={title:title,type:document.getElementById('rf_type').value,amount:amount,date:document.getElementById('rf_date').value,invoices:document.getElementById('rf_invoices').value.trim(),status:document.getElementById('rf_status').value,remark:document.getElementById('rf_remark').value.trim(),operator:getOperator(),created:id?(reims.find(function(x){return x.id===id;}).created||todayStr()):todayStr()};
+  if(id){data.id=id;var idx=reims.findIndex(function(x){return x.id===id;});reims[idx]=data;}
+  else{data.id='r'+Date.now();reims.unshift(data);}
+  saveData('reims',reims);
+  document.getElementById('reimForm').classList.add('hidden');
+  renderReimburse();
+  toast(id?'已更新报销':'已添加报销');
+}
+
+function deleteReim(id){
+  showModal('删除报销','确认删除该报销记录？',function(){
+    reims=reims.filter(function(x){return x.id!==id;});
+    saveData('reims',reims);
+    renderReimburse();
+    toast('已删除');
+  });
+}
+
+function renderReimburse(){
+  var total=reims.reduce(function(s,r){return s+(parseFloat(r.amount)||0);},0);
+  var withInv=reims.filter(function(r){return r.status==='有票';}).length;
+  var noInv=reims.filter(function(r){return r.status==='无票';}).length;
+  var statsEl=document.getElementById('reimStats');
+  if(statsEl)statsEl.innerHTML='<div class="reim-stat"><div class="v">¥'+fmtMoney(total)+'</div><div class="l">报销总额</div></div><div class="reim-stat"><div class="v" style="color:var(--green)">'+withInv+'</div><div class="l">有票</div></div><div class="reim-stat"><div class="v" style="color:var(--orange)">'+noInv+'</div><div class="l">无票</div></div>';
+  var listEl=document.getElementById('reimList');
+  if(!listEl)return;
+  if(reims.length===0){listEl.innerHTML='<div class="list-empty">暂无报销记录，点击「新建报销」开始</div>';return;}
+  var sorted=reims.slice().sort(function(a,b){return (b.date||'').localeCompare(a.date||'');});
+  var html='';
+  sorted.forEach(function(r){
+    var stCls={'有票':'bs-approved','无票':'bs-pending'}[r.status]||'bs-pending';
+    html+='<div class="list-item">';
+    html+='<div class="list-item-row"><div style="flex:1;min-width:0">';
+    html+='<div class="list-item-title">'+esc(r.title)+'</div>';
+    html+='<div class="list-item-meta"><span class="badge badge-stage">'+esc(r.type)+'</span><span class="badge badge-amount">¥'+fmtMoney(r.amount)+'</span><span class="badge-status '+stCls+'">'+r.status+'</span>'+(r.operator?'<span class="badge badge-op">'+esc(r.operator)+'</span>':'')+'</div>';
+    html+='<div class="list-item-desc">日期：'+(r.date||'-')+(r.invoices?(' · 发票'+r.invoices+'张'):'')+'</div>';
+    if(r.remark)html+='<div class="list-item-desc">'+esc(r.remark)+'</div>';
+    html+='</div>';
+    html+='<div class="list-item-actions"><button class="icon-btn" onclick="showReimForm(\''+r.id+'\')" title="编辑"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4z"/></svg></button><button class="icon-btn danger" onclick="deleteReim(\''+r.id+'\')" title="删除"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+    html+='</div></div>';
+  });
+  listEl.innerHTML=html;
+}
+
+// ========== Attendance ==========
+var AT_CODES=[
+  {c:'A',l:'境内出勤',g:'work'},{c:'I',l:'境外出勤',g:'work'},{c:'R',l:'境内出差',g:'work'},{c:'Q',l:'境外出差',g:'work'},
+  {c:'X',l:'休息日',g:'rest'},{c:'K',l:'就地休息',g:'rest'},{c:'L',l:'节假日',g:'rest'},
+  {c:'P',l:'休息日加班',g:'ot'},{c:'J',l:'节假日加班',g:'ot'},
+  {c:'M',l:'年休假',g:'leave'},{c:'O',l:'补休',g:'leave'},{c:'N',l:'公休假',g:'leave'},{c:'C',l:'事假',g:'leave'},{c:'B',l:'病假',g:'leave'},
+  {c:'T',l:'探亲假',g:'leave'},{c:'U',l:'产假',g:'leave'},{c:'D',l:'看护假',g:'leave'},{c:'E',l:'育儿假',g:'leave'},{c:'F',l:'护理假',g:'leave'},
+  {c:'Y',l:'计生假',g:'leave'},{c:'H',l:'婚假',g:'leave'},{c:'S',l:'丧假',g:'leave'},
+  {c:'G',l:'工伤',g:'bad'},{c:'W',l:'旷工',g:'bad'},{c:'V',l:'迟到',g:'bad'},{c:'Z',l:'早退',g:'bad'},
+  {c:'AA',l:'船员脱产培训考证',g:'train'},{c:'AB',l:'船员脱产会议',g:'train'},{c:'AC',l:'其它',g:'train'}
+];
+var AT_CODE_COLORS={work:'#16a34a',rest:'#2563eb',ot:'#8b5cf6',leave:'#f59e0b',bad:'#ef4444',train:'#6b7280'};
+var LEGAL_HOLIDAYS_DEFAULT=['2026-01-01','2026-02-17','2026-02-18','2026-02-19','2026-04-05','2026-05-01','2026-06-19','2026-09-25','2026-10-01','2026-10-02','2026-10-03'];
+function getLegalHolidays(){var custom=localStorage.getItem(PREFIX+'legalHolidays');if(custom){try{return JSON.parse(custom);}catch(e){}}return LEGAL_HOLIDAYS_DEFAULT;}
+
+function renderAttendance(){
+  var monthSel=document.getElementById('atMonth');
+  var personSel=document.getElementById('atPerson');
+  if(!monthSel)return;
+  if(monthSel.children.length===0){
+    var now=new Date();
+    for(var i=-6;i<=3;i++){
+      var d=new Date(now.getFullYear(),now.getMonth()+i,1);
+      var key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+      var o=document.createElement('option');o.value=key;o.textContent=d.getFullYear()+'年'+(d.getMonth()+1)+'月';
+      if(i===0)o.selected=true;monthSel.appendChild(o);
+    }
+  }
+  var monthKey=monthSel.value;
+  if(!attendance[monthKey])attendance[monthKey]={persons:[],records:{}};
+  var md=attendance[monthKey];
+  personSel.innerHTML='<option value="">全部人员</option>';
+  (md.persons||[]).forEach(function(p){var o=document.createElement('option');o.value=p;o.textContent=p;personSel.appendChild(o);});
+  var focus=personSel.value;
+  var legalSet=getLegalHolidays();
+  var year=parseInt(monthKey.split('-')[0]);var month=parseInt(monthKey.split('-')[1]);
+  var dim=new Date(year,month,0).getDate();
+  var legalDays={};
+  for(var day=1;day<=dim;day++){var ds=monthKey+'-'+String(day).padStart(2,'0');if(legalSet.indexOf(ds)>=0)legalDays[day]=true;}
+  var persons=focus?[focus]:(md.persons||[]);
+  var html='<thead><tr><th class="name">姓名</th>';
+  for(var day=1;day<=dim;day++){var dow=new Date(year,month-1,day).getDay();var wk=(dow===0||dow===6);var cls=(legalDays[day]?'hl':'')+(wk?' weekend':'');html+='<th class="day'+(cls?' '+cls:'')+'">'+day+'</th>';}
+  html+='</tr></thead><tbody>';
+  persons.forEach(function(pn){
+    html+='<tr><td class="name">'+esc(pn)+'</td>';
+    var rec=(md.records||{})[pn]||{};
+    for(var day=1;day<=dim;day++){var v=rec[day]||'';var dow=new Date(year,month-1,day).getDay();var wk=(dow===0||dow===6);var cls=legalDays[day]?'hl':(wk?'weekend':'');html+='<td class="'+cls+'"><input type="text" maxlength="2" data-p="'+esc(pn)+'" data-d="'+day+'" value="'+esc(v)+'" oninput="onAtInput(this)"></td>';}
+    html+='</tr>';
+  });
+  if(persons.length===0)html+='<tr><td colspan="'+(dim+1)+'" style="padding:20px;color:var(--gray-400)">暂无考勤人员，点击「+ 添加考勤人员」</td></tr>';
+  html+='</tbody>';
+  document.getElementById('atGrid').innerHTML=html;
+  renderAtLegend();
+  renderAtNote(monthKey,legalDays);
+}
+
+function onAtInput(input){
+  var v=input.value.toUpperCase().trim();input.value=v;
+  var day=parseInt(input.dataset.d);var pn=input.dataset.p;
+  var monthKey=document.getElementById('atMonth').value;
+  var ds=monthKey+'-'+String(day).padStart(2,'0');
+  var isLegal=getLegalHolidays().indexOf(ds)>=0;
+  if((v==='L'||v==='J')&&!isLegal){toast('该日非法定节假日，不可使用 '+v+'（调休日不得选节假日/节假日加班）');input.value='';v='';}
+  if(!attendance[monthKey])attendance[monthKey]={persons:[],records:{}};
+  if(!attendance[monthKey].records[pn])attendance[monthKey].records[pn]={};
+  if(v)attendance[monthKey].records[pn][day]=v;else delete attendance[monthKey].records[pn][day];
+  saveData('attendance',attendance);
+}
+
+function saveAttendance(){saveData('attendance',attendance);toast('考勤已保存');}
+
+function addAtPerson(){
+  var name=prompt('请输入考勤人员姓名：');if(!name||!name.trim())return;name=name.trim();
+  var monthKey=document.getElementById('atMonth').value;
+  if(!attendance[monthKey])attendance[monthKey]={persons:[],records:{}};
+  if(attendance[monthKey].persons.indexOf(name)>=0){toast('该人员已存在');return;}
+  attendance[monthKey].persons.push(name);
+  saveData('attendance',attendance);renderAttendance();toast('已添加 '+name);
+}
+
+function renderAtLegend(){
+  var html='<h4>考勤标识说明（按字母输入）</h4><div class="at-legend-grid">';
+  AT_CODES.forEach(function(it){html+='<div class="at-legend-item"><span class="at-code" style="background:'+AT_CODE_COLORS[it.g]+'">'+it.c+'</span>'+it.l+'</div>';});
+  html+='</div>';
+  var el=document.getElementById('atLegend');if(el)el.innerHTML=html;
+}
+
+function renderAtNote(monthKey,legalDays){
+  var legalList=Object.keys(legalDays).map(function(d){return parseInt(d);}).sort(function(a,b){return a-b;});
+  var html='<div class="at-note"><b>考勤规则</b><br>';
+  html+='法定节假日共11天：①元旦1天（1月1日）；②春节3天（农历正月初一、初二、初三）；③清明1天（清明节气当日）；④劳动节1天（5月1日）；⑤端午1天（农历端午当日）；⑥中秋1天（农历中秋当日）；⑦国庆3天（10月1日、2日、3日）。<br>';
+  html+='仅法定节假日当天可选择 <b>L（节假日）</b> 或 <b>J（节假日加班）</b>，其余调休日不得选择，系统会自动拦截。<br>';
+  if(legalList.length>0)html+='本月法定节假日：第 <b>'+legalList.join('、')+'</b> 天（橙色高亮列）。';else html+='本月无法定节假日。';
+  html+='<br><a href="javascript:editLegalHolidays()" style="color:var(--primary);font-weight:600">调整法定节假日日期</a></div>';
+  var el=document.getElementById('atNote');if(el)el.innerHTML=html;
+}
+
+function editLegalHolidays(){
+  var cur=getLegalHolidays();
+  var v=prompt('请输入法定节假日日期（YYYY-MM-DD，逗号分隔）：',cur.join(','));
+  if(v===null)return;
+  var arr=v.split(/[,，\s]+/).map(function(s){return s.trim();}).filter(Boolean);
+  localStorage.setItem(PREFIX+'legalHolidays',JSON.stringify(arr));
+  renderAttendance();toast('法定节假日已更新（共'+arr.length+'天）');
+}
+
+// ========== Modal ==========
+function showModal(title,body,onConfirm){
+  var html='<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">';
+  html+='<div class="modal">';
+  html+='<div class="modal-header"><h3>'+title+'</h3><button class="modal-close" onclick="closeModal()"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>';
+  html+='<div class="modal-body"><div class="confirm-text">'+body+'</div></div>';
+  html+='<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">取消</button><button class="btn btn-primary" id="modalConfirmBtn">确认</button></div>';
+  html+='</div></div>';
+  document.getElementById('modalContainer').innerHTML=html;
+  document.getElementById('modalConfirmBtn').onclick=function(){closeModal();if(onConfirm)onConfirm();};
+}
+function closeModal(){document.getElementById('modalContainer').innerHTML='';}
+
+// ========== Toast ==========
+var toastTimer=null;
+function toast(msg){
+  var el=document.getElementById('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(function(){el.classList.remove('show');},2500);
+}
+
+// ========== Start ==========
+init();
+</script>
+</body>
+</html>

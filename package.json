@@ -1,0 +1,12 @@
+{
+  "name": "gx-region-workbench",
+  "version": "1.0.0",
+  "description": "广西区域公司工作台 - 云端同步版",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.2"
+  }
+}

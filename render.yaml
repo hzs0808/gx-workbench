@@ -1,0 +1,14 @@
+# Render.com Blueprint
+# 广西区域公司工作台 - 云端同步版
+services:
+  - type: web
+    name: gx-region-workbench
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production

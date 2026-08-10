@@ -1,0 +1,10 @@
+node_modules/
+cloud_data.json
+*.log
+.DS_Store
+.workbuddy/
+assets/Aerial_view_of_a_large_scale_d_2026-08-10T03-35-49.png
+assets/company_logo.png
+assets/company_logo_b64.txt
+assets/login_bg_b64.txt
+overview.md
