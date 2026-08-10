@@ -615,6 +615,15 @@ var _ghRetryCount=0;
 // GitHub repo config for cloud data storage
 var GH_TOKEN=['github_pat_','11CLF4U6Y0','Z93xPSY0e7df_','UX2jrrrIfNJv1','OcfPFWbtxBrdhD','nwzYKVRkJNgOMEu','4BEZR622FIvFruM2f'].join('');
 var GH_API_URL='https://api.github.com/repos/hzs0808/gx-workbench/contents/cloud_data.json';
+var GH_RAW_URL='https://raw.githubusercontent.com/hzs0808/gx-workbench/main/cloud_data.json';
+
+// UTF-8 safe base64 encode/decode
+function utf8ToB64(str){
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function b64ToUtf8(b64){
+  return decodeURIComponent(escape(atob(b64)));
+}
 
 function hashPass(pass){
   var h=5381;
@@ -639,21 +648,34 @@ function syncFromCloud(){
   if(!USE_CLOUD)return Promise.resolve();
   _cloudSyncing=true;
   _skipCloudPush=true;
+  var sha=null;
   return fetch(GH_API_URL,{headers:ghHeaders()}).then(function(r){
     if(r.status===404){
       // File doesn't exist, push local data
       _cloudSyncing=false;_skipCloudPush=false;
       syncToCloud();
-      return;
+      return null;
     }
     return r.json();
   }).then(function(resp){
-    if(!resp||!resp.content)return;
-    _ghSha=resp.sha;
-    var raw=atob(resp.content.replace(/\n/g,''));
-    var data=JSON.parse(raw);
+    if(!resp)return null;
+    sha=resp.sha;
+    _ghSha=sha;
+    // If file is too large (>1MB), GitHub returns encoding:"none" with empty content
+    // Fall back to raw URL to get actual file content
+    if(resp.encoding==='none'||!resp.content){
+      console.log('Cloud file too large, using raw URL...');
+      return fetch(GH_RAW_URL,{headers:ghHeaders()}).then(function(r2){return r2.text();}).then(function(text){
+        return JSON.parse(text);
+      });
+    }
+    // Normal case: decode base64 with UTF-8 support
+    var raw=b64ToUtf8(resp.content.replace(/\n/g,''));
+    return JSON.parse(raw);
+  }).then(function(data){
+    if(!data)return;
     // Auto-recovery: if cloud is empty but we have local data, push local to cloud
-    var cloudEmpty=!data.users||data.users.length===0;
+    var cloudEmpty=(!data.users||data.users.length===0)&&(!data.clients||data.clients.length===0)&&(!data.projects||data.projects.length===0);
     var hasLocal=loadUsers().length>0||clients.length>0||projects.length>0||visits.length>0;
     if(cloudEmpty&&hasLocal){
       console.log('Cloud data empty, auto-recovering from local...');
@@ -662,17 +684,34 @@ function syncFromCloud(){
       return;
     }
     var changed=false;
-    if(data.users&&data.users.length){saveUsers(data.users);changed=true;}
-    if(data.clients){clients=data.clients;saveData('clients',clients);changed=true;}
-    if(data.projects){projects=data.projects;saveData('projects',projects);changed=true;}
-    if(data.visits){visits=data.visits;saveData('visits',visits);changed=true;}
-    if(data.reims){reims=data.reims;saveData('reims',reims);changed=true;}
-    if(data.attendance){attendance=data.attendance;saveData('attendance',attendance);changed=true;}
-    if(data.todos){todos=data.todos;saveData('todos',todos);changed=true;}
-    if(data.dismissed){saveDismissed(data.dismissed);changed=true;}
-    if(data.legalHolidays){localStorage.setItem(PREFIX+'legalHolidays',JSON.stringify(data.legalHolidays));changed=true;}
+    var needPush=false;
+    // MERGE users: keep cloud users, add local users not in cloud
+    if(data.users){
+      var localUsers=loadUsers();
+      var merged=data.users.slice();
+      localUsers.forEach(function(lu){
+        if(!merged.some(function(cu){return cu.name===lu.name;})){
+          merged.push(lu);
+          needPush=true;
+        }
+      });
+      if(merged.length>0){saveUsers(merged);changed=true;}
+    }
+    if(data.clients&&data.clients.length){clients=data.clients;saveData('clients',clients);changed=true;}
+    if(data.projects&&data.projects.length){projects=data.projects;saveData('projects',projects);changed=true;}
+    if(data.visits&&data.visits.length){visits=data.visits;saveData('visits',visits);changed=true;}
+    if(data.reims&&data.reims.length){reims=data.reims;saveData('reims',reims);changed=true;}
+    if(data.attendance&&Object.keys(data.attendance).length){attendance=data.attendance;saveData('attendance',attendance);changed=true;}
+    if(data.todos&&data.todos.length){todos=data.todos;saveData('todos',todos);changed=true;}
+    if(data.dismissed&&data.dismissed.length){saveDismissed(data.dismissed);changed=true;}
+    if(data.legalHolidays&&data.legalHolidays.length){localStorage.setItem(PREFIX+'legalHolidays',JSON.stringify(data.legalHolidays));changed=true;}
     _lastLocalSave=Date.now();
     if(changed&&typeof renderAll==='function')renderAll();
+    // If we merged local-only users, push back to cloud
+    if(needPush){
+      _cloudSyncing=false;_skipCloudPush=false;
+      syncToCloud();
+    }
   }).catch(function(e){console.log('Cloud sync failed:',e);}).then(function(){_cloudSyncing=false;_skipCloudPush=false;});
 }
 
@@ -691,7 +730,7 @@ function syncToCloud(){
     updateBy:getOperator(),
     updateAt:new Date().toISOString()
   };
-  var content=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  var content=utf8ToB64(JSON.stringify(data));
   var body=JSON.stringify({message:'sync '+getOperator()+' '+new Date().toLocaleTimeString(),content:content});
   if(_ghSha){body=JSON.stringify({message:'sync '+getOperator()+' '+new Date().toLocaleTimeString(),content:content,sha:_ghSha});}
   fetch(GH_API_URL,{method:'PUT',headers:ghHeaders(),body:body}).then(function(r){
@@ -796,10 +835,15 @@ function doRegister(){
   if(users.some(function(u){return u.name===name;})){errEl.textContent='用户名「'+name+'」已存在，请直接登录';return;}
   users.push({name:name,password:hashPass(pass),created:todayStr()});
   saveUsers(users);
+  // Push new user to cloud immediately (before syncFromCloud can overwrite)
+  if(USE_CLOUD){
+    _skipCloudPush=false;_cloudSyncing=false;
+    syncToCloud();
+  }
   // Auto login
   saveSession({name:name,loginAt:new Date().toISOString()});
   saveOperator(name);
-  enterWorkspace();
+  enterWorkspace(true);
   toast('注册成功，已自动登录');
 }
 function doLogin(){
@@ -834,14 +878,16 @@ function doLogout(){
     toast('已退出登录');
   });
 }
-function enterWorkspace(){
+function enterWorkspace(skipCloudSync){
   var session=loadSession();
   if(session&&session.name){
     document.getElementById('authOverlay').style.display='none';
     document.getElementById('currentUserName').textContent=session.name;
     initWorkspace();
-    if(USE_CLOUD){
+    if(USE_CLOUD&&!skipCloudSync){
       syncFromCloud().then(function(){renderRegisteredList();});
+    }else{
+      renderRegisteredList();
     }
   }
 }
